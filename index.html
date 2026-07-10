@@ -15,33 +15,43 @@
 
 <a class="skip-link" href="#main">본문 바로가기</a>
 
-<header class="site-header">
-  <div class="container header-inner">
-    <a class="brand" href="#top" id="brand-name">상담심리사</a>
-    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="primaryNav" aria-label="메뉴 열기">
-      <span></span><span></span><span></span>
+<div class="app-shell">
+
+  <div class="mobile-topbar">
+    <a class="brand" href="#top">
+      <span class="brand-name">허훈<em>상담</em></span>
+    </a>
+    <button class="sidebar-toggle" id="sidebarToggle" aria-expanded="false" aria-controls="sidebar" aria-label="메뉴 열기">
+      <svg viewBox="0 0 18 18" width="20" height="20" aria-hidden="true"><path d="M3 5h12M3 9h12M3 13h12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
     </button>
-    <nav class="primary-nav" id="primaryNav" aria-label="주요 메뉴">
+  </div>
+
+  <div class="scrim" id="scrim" hidden></div>
+
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="#top">
+      <span class="brand-name">허훈<em>상담</em></span>
+    </a>
+    <nav class="sidebar-nav" aria-label="주요 메뉴">
       <ul id="navList"></ul>
     </nav>
-  </div>
-</header>
+    <p class="sidebar-caption">상담심리 플랫폼</p>
+  </aside>
 
-<main id="main">
+  <main id="main" class="main-area">
 
-  <!-- 1. Hero -->
-  <section id="top" class="hero">
-    <div class="container">
+    <!-- 1. Hero -->
+    <section id="top" class="hero-card">
+      <img src="assets/moon.svg" alt="" class="hero-moon" aria-hidden="true" />
       <p class="hero-eyebrow" id="heroRole"></p>
       <h1 id="heroName"></h1>
       <p class="hero-tagline" id="heroTagline"></p>
-      <a href="#contact" class="btn btn-primary">상담 문의하기</a>
-    </div>
-  </section>
+      <a href="#contact" class="btn btn-hero">상담 문의하기</a>
+    </section>
 
-  <!-- 2. About -->
-  <section id="about" class="section">
-    <div class="container">
+    <!-- 2. About -->
+    <section id="about" class="content-card">
+      <p class="section-label">ABOUT</p>
       <h2 class="section-title">소개</h2>
       <div class="about-grid">
         <div class="about-photo-wrap">
@@ -76,29 +86,26 @@
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- 3. Approach -->
-  <section id="approach" class="section section-alt">
-    <div class="container">
+    <!-- 3. Approach -->
+    <section id="approach" class="content-card">
+      <p class="section-label">APPROACH</p>
       <h2 class="section-title">주요 상담기법</h2>
       <p id="approachIntro" class="approach-intro"></p>
       <div id="approachCards" class="card-grid"></div>
-    </div>
-  </section>
+    </section>
 
-  <!-- 4. Works -->
-  <section id="works" class="section">
-    <div class="container">
+    <!-- 4. Works -->
+    <section id="works" class="content-card">
+      <p class="section-label">WORKS</p>
       <h2 class="section-title">연구·챗봇</h2>
       <div id="worksCards" class="card-grid"></div>
-    </div>
-  </section>
+    </section>
 
-  <!-- 5. Contact -->
-  <section id="contact" class="section section-alt">
-    <div class="container">
+    <!-- 5. Contact -->
+    <section id="contact" class="content-card">
+      <p class="section-label">CONTACT</p>
       <h2 class="section-title">문의</h2>
       <p class="contact-intro">아래 폼을 작성하시면 메일 앱이 열리며, 내용을 확인하신 뒤 전송 버튼을 눌러주시면 됩니다.</p>
 
@@ -123,17 +130,15 @@
         <a id="contactEmailLink" href=""></a>
       </p>
       <p id="contactNotice" class="contact-notice"></p>
-    </div>
-  </section>
+    </section>
 
-</main>
+    <footer class="site-footer">
+      <p id="footerText"></p>
+      <p><a id="footerEmailLink" href=""></a></p>
+    </footer>
 
-<footer class="site-footer">
-  <div class="container">
-    <p id="footerText"></p>
-    <p><a id="footerEmailLink" href=""></a></p>
-  </div>
-</footer>
+  </main>
+</div>
 
 <script src="data/content.js"></script>
 <script src="js/render.js"></script>

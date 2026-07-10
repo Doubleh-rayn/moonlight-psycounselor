@@ -15,7 +15,6 @@
   function renderSite() {
     const { site } = CONTENT;
     document.title = site.name + " | " + site.role;
-    setText("brand-name", site.name);
     setText("heroRole", site.role);
     setText("heroName", site.name);
     setText("heroTagline", site.tagline);
@@ -26,31 +25,72 @@
     if (node) node.textContent = value || "";
   }
 
+  // 아웃라인 아이콘 세트 (18x18, stroke=currentColor) — 사이드바 메뉴 항목과 매칭
+  const NAV_ICONS = {
+    "#about":
+      '<svg class="nav-icon" viewBox="0 0 18 18" width="18" height="18" aria-hidden="true"><circle cx="9" cy="6" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3.5 15.2c1-3.2 3-4.7 5.5-4.7s4.5 1.5 5.5 4.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+    "#approach":
+      '<svg class="nav-icon" viewBox="0 0 18 18" width="18" height="18" aria-hidden="true"><path d="M9 4.6c-1.4-1-3.3-1.3-4.8-1v9.6c1.5-.3 3.4 0 4.8 1 1.4-1 3.3-1.3 4.8-1V3.6c-1.5-.3-3.4 0-4.8 1z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M9 4.6v9.6" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>',
+    "#works":
+      '<svg class="nav-icon" viewBox="0 0 18 18" width="18" height="18" aria-hidden="true"><path d="M3.5 5A1.5 1.5 0 0 1 5 3.5h8A1.5 1.5 0 0 1 14.5 5v6a1.5 1.5 0 0 1-1.5 1.5H8l-3 2.3v-2.3H5A1.5 1.5 0 0 1 3.5 11V5z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>',
+    "#contact":
+      '<svg class="nav-icon" viewBox="0 0 18 18" width="18" height="18" aria-hidden="true"><rect x="3" y="4.5" width="12" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M3.5 5.5l5.5 4.3 5.5-4.3" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  };
+
   function renderNav() {
     const list = document.getElementById("navList");
     if (!list || !CONTENT.nav) return;
     CONTENT.nav.forEach((item) => {
       const li = el("li");
-      const a = el("a", null, item.label);
+      const a = document.createElement("a");
       a.href = item.href;
+      if (NAV_ICONS[item.href]) a.innerHTML = NAV_ICONS[item.href];
+      a.appendChild(el("span", null, item.label));
       li.appendChild(a);
       list.appendChild(li);
     });
 
-    // 모바일 메뉴 토글
-    const toggle = document.getElementById("navToggle");
-    const nav = document.getElementById("primaryNav");
-    if (toggle && nav) {
+    const navLinks = Array.from(list.querySelectorAll("a"));
+
+    // 모바일 사이드바(드로어) 토글
+    const toggle = document.getElementById("sidebarToggle");
+    const sidebar = document.getElementById("sidebar");
+    const scrim = document.getElementById("scrim");
+
+    function closeSidebar() {
+      if (sidebar) sidebar.classList.remove("open");
+      if (toggle) toggle.setAttribute("aria-expanded", "false");
+      if (scrim) scrim.hidden = true;
+    }
+
+    if (toggle && sidebar) {
       toggle.addEventListener("click", () => {
-        const isOpen = nav.classList.toggle("open");
+        const isOpen = sidebar.classList.toggle("open");
         toggle.setAttribute("aria-expanded", String(isOpen));
+        if (scrim) scrim.hidden = !isOpen;
       });
-      list.querySelectorAll("a").forEach((a) => {
-        a.addEventListener("click", () => {
-          nav.classList.remove("open");
-          toggle.setAttribute("aria-expanded", "false");
-        });
-      });
+      navLinks.forEach((a) => a.addEventListener("click", closeSidebar));
+      if (scrim) scrim.addEventListener("click", closeSidebar);
+    }
+
+    // 스크롤 위치에 따라 현재 섹션의 메뉴를 활성 표시
+    const sections = CONTENT.nav
+      .map((item) => document.querySelector(item.href))
+      .filter(Boolean);
+
+    if (sections.length && "IntersectionObserver" in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            navLinks.forEach((a) => {
+              a.classList.toggle("active", a.getAttribute("href") === "#" + entry.target.id);
+            });
+          });
+        },
+        { rootMargin: "-40% 0px -50% 0px", threshold: 0 }
+      );
+      sections.forEach((section) => observer.observe(section));
     }
   }
 
@@ -102,6 +142,7 @@
 
     items.forEach((item) => {
       const card = el("article", "card");
+      if (item.tag === "변화의 도구") card.classList.add("accent-b");
 
       if (kindLabelKey && item[kindLabelKey]) {
         card.appendChild(el("span", "card-tag", item[kindLabelKey]));
