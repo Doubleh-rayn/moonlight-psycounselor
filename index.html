@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>허훈 | 상담심리사</title>
+<meta name="description" content="상담심리사 허훈의 소개, 상담기법, 연구·챗봇 결과물을 소개하는 홈페이지입니다." />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" />
+<link rel="stylesheet" as="style" crossorigin
+  href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<a class="skip-link" href="#main">본문 바로가기</a>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="#top" id="brand-name">상담심리사</a>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="primaryNav" aria-label="메뉴 열기">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="primary-nav" id="primaryNav" aria-label="주요 메뉴">
+      <ul id="navList"></ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- 1. Hero -->
+  <section id="top" class="hero">
+    <div class="container">
+      <p class="hero-eyebrow" id="heroRole"></p>
+      <h1 id="heroName"></h1>
+      <p class="hero-tagline" id="heroTagline"></p>
+      <a href="#contact" class="btn btn-primary">상담 문의하기</a>
+    </div>
+  </section>
+
+  <!-- 2. About -->
+  <section id="about" class="section">
+    <div class="container">
+      <h2 class="section-title">소개</h2>
+      <div class="about-grid">
+        <div class="about-photo-wrap">
+          <img id="aboutPhoto" class="about-photo" src="" alt="" hidden />
+        </div>
+        <div class="about-body">
+          <p id="aboutIntro" class="about-intro"></p>
+
+          <h3 class="sub-title">가치관</h3>
+          <ul id="aboutValues" class="value-list"></ul>
+
+          <h3 class="sub-title">이력</h3>
+          <ul id="aboutCareer" class="career-list"></ul>
+
+          <h3 class="sub-title">근무처</h3>
+          <ul id="aboutWorkplace" class="workplace-list"></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Approach -->
+  <section id="approach" class="section section-alt">
+    <div class="container">
+      <h2 class="section-title">주요 상담기법</h2>
+      <div id="approachCards" class="card-grid"></div>
+    </div>
+  </section>
+
+  <!-- 4. Works -->
+  <section id="works" class="section">
+    <div class="container">
+      <h2 class="section-title">연구·챗봇</h2>
+      <div id="worksCards" class="card-grid"></div>
+    </div>
+  </section>
+
+  <!-- 5. Contact -->
+  <section id="contact" class="section section-alt">
+    <div class="container">
+      <h2 class="section-title">문의</h2>
+      <p class="contact-intro">아래 폼을 작성하시면 메일 앱이 열리며, 내용을 확인하신 뒤 전송 버튼을 눌러주시면 됩니다.</p>
+
+      <form id="contactForm" class="contact-form" novalidate>
+        <div class="form-row">
+          <label for="cf-name">이름</label>
+          <input type="text" id="cf-name" name="name" required autocomplete="name" />
+        </div>
+        <div class="form-row">
+          <label for="cf-email">회신받을 이메일</label>
+          <input type="email" id="cf-email" name="email" required autocomplete="email" />
+        </div>
+        <div class="form-row">
+          <label for="cf-message">문의 내용</label>
+          <textarea id="cf-message" name="message" rows="6" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">보내기</button>
+      </form>
+
+      <p class="contact-direct">
+        메일 앱이 열리지 않는다면 아래 이메일로 직접 연락해 주세요:
+        <a id="contactEmailLink" href=""></a>
+      </p>
+      <p id="contactNotice" class="contact-notice"></p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p id="footerText"></p>
+    <p><a id="footerEmailLink" href=""></a></p>
+  </div>
+</footer>
+
+<script src="data/content.js"></script>
+<script src="js/render.js"></script>
+</body>
+</html>
