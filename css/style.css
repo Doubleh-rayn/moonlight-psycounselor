@@ -255,6 +255,13 @@ textarea:focus-visible {
   text-align: center;
 }
 
+.approach-intro {
+  max-width: 640px;
+  margin: -0.6em auto 2.4em;
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
 .sub-title {
   font-size: 1.05rem;
   margin-top: 1.6em;
@@ -279,7 +286,7 @@ textarea:focus-visible {
 .about-photo {
   width: 100%;
   border-radius: var(--radius);
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 3 / 4;
   object-fit: cover;
   background: var(--color-border);
 }
@@ -289,15 +296,13 @@ textarea:focus-visible {
 }
 
 .value-list,
-.career-list,
-.workplace-list {
+.career-list {
   margin: 0;
   padding-left: 1.2em;
 }
 
 .value-list li,
-.career-list li,
-.workplace-list li {
+.career-list li {
   margin-bottom: 0.5em;
 }
 
@@ -350,6 +355,17 @@ textarea:focus-visible {
 .card-summary {
   color: var(--color-text-muted);
   flex-grow: 1;
+}
+
+.card-merits {
+  margin: 0.5em 0;
+  padding-left: 1.2em;
+  color: var(--color-text-muted);
+  font-size: 0.92rem;
+}
+
+.card-merits li {
+  margin-bottom: 0.35em;
 }
 
 .card-link {

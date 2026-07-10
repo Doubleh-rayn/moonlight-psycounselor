@@ -71,32 +71,29 @@
       }
     }
 
-    const valuesList = document.getElementById("aboutValues");
-    if (valuesList && Array.isArray(about.values)) {
-      about.values.forEach((v) => valuesList.appendChild(el("li", null, v)));
+    renderAboutList("aboutValuesSection", "aboutValues", about.values);
+    renderAboutList("aboutStrengthsSection", "aboutStrengths", about.strengths);
+    renderAboutList("aboutEducationSection", "aboutEducation", about.education);
+    renderAboutList("aboutCareerSection", "aboutCareer", about.career);
+    renderAboutList("aboutCertificationsSection", "aboutCertifications", about.certifications);
+  }
+
+  // 빈 문자열("")로 채워진 항목은 아직 확인되지 않은 정보이므로 화면에서 건너뜁니다.
+  // 목록에 표시할 내용이 하나도 없으면 소제목까지 함께 숨겨 빈 섹션이 보이지 않게 합니다.
+  function renderAboutList(sectionId, listId, items) {
+    const section = document.getElementById(sectionId);
+    const list = document.getElementById(listId);
+    if (!section || !list) return;
+
+    const visibleItems = Array.isArray(items) ? items.filter((v) => v && String(v).trim()) : [];
+
+    if (visibleItems.length === 0) {
+      section.hidden = true;
+      return;
     }
 
-    const careerList = document.getElementById("aboutCareer");
-    if (careerList && Array.isArray(about.career)) {
-      about.career.forEach((c) => careerList.appendChild(el("li", null, c)));
-    }
-
-    const workplaceList = document.getElementById("aboutWorkplace");
-    if (workplaceList && Array.isArray(about.workplace)) {
-      about.workplace.forEach((w) => {
-        const li = el("li");
-        if (w.link) {
-          const a = el("a", null, w.name + " — " + w.role);
-          a.href = w.link;
-          a.target = "_blank";
-          a.rel = "noopener noreferrer";
-          li.appendChild(a);
-        } else {
-          li.textContent = w.name + " — " + w.role;
-        }
-        workplaceList.appendChild(li);
-      });
-    }
+    section.hidden = false;
+    visibleItems.forEach((v) => list.appendChild(el("li", null, v)));
   }
 
   function renderCards(containerId, items, kindLabelKey) {
@@ -112,6 +109,12 @@
 
       card.appendChild(el("h3", "card-title", item.title));
       card.appendChild(el("p", "card-summary", item.summary));
+
+      if (Array.isArray(item.merits) && item.merits.length) {
+        const meritsList = el("ul", "card-merits");
+        item.merits.forEach((m) => meritsList.appendChild(el("li", null, m)));
+        card.appendChild(meritsList);
+      }
 
       if (item.link) {
         const a = el("a", "card-link", "자세히 보기 →");
@@ -180,7 +183,8 @@
     renderSite();
     renderNav();
     renderAbout();
-    renderCards("approachCards", CONTENT.approaches);
+    setText("approachIntro", CONTENT.approachIntro);
+    renderCards("approachCards", CONTENT.approaches, "tag");
     renderCards("worksCards", CONTENT.works, "type");
     renderContact();
     renderFooter();
