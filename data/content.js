@@ -11,8 +11,7 @@ const CONTENT = {
     role: "심리상담가 · 교육컨설턴트",
     tagline: "마음을 잇고, 의미를 번역합니다",
     email: "hhu2004@gmail.com",
-    // 히어로 배경. 실사진(assets/hero-moon-lake.jpg)이 준비되면 아래 경로로 바꿔주세요.
-    heroImage: "assets/hero-moonriver.svg",
+    heroImage: "assets/hero-moon-lake.jpg",
   },
 
   // ── 상단 내비게이션 ──────────────────────────
