@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" role="img" aria-label="달빛이 비치는 고요한 강물 풍경">
+  <defs>
+    <linearGradient id="nightSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#071A1E"/>
+      <stop offset="55%" stop-color="#0E332F"/>
+      <stop offset="100%" stop-color="#164A45"/>
+    </linearGradient>
+    <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#123F3C"/>
+      <stop offset="100%" stop-color="#051517"/>
+    </linearGradient>
+    <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#F6FBF7" stop-opacity="0.5"/>
+      <stop offset="45%" stop-color="#CFE9DE" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#CFE9DE" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="moonBody" cx="38%" cy="35%" r="72%">
+      <stop offset="0%" stop-color="#FBFFFC"/>
+      <stop offset="55%" stop-color="#EAF4EE"/>
+      <stop offset="100%" stop-color="#C9DED4"/>
+    </radialGradient>
+    <radialGradient id="milkyway" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#DCEDE6" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#DCEDE6" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .reflection { animation: shimmer 6s ease-in-out infinite; }
+      .reflection-slow { animation: shimmer 7.5s ease-in-out infinite; }
+      @keyframes shimmer { 0%, 100% { opacity: 0.9; } 50% { opacity: 0.5; } }
+      @media (prefers-reduced-motion: reduce) {
+        .reflection, .reflection-slow { animation: none; }
+      }
+    </style>
+  </defs>
+
+  <!-- 밤하늘 -->
+  <rect x="0" y="0" width="1600" height="620" fill="url(#nightSky)"/>
+
+  <!-- 은하수 띠 -->
+  <ellipse cx="620" cy="230" rx="620" ry="130" fill="url(#milkyway)" transform="rotate(-18 620 230)"/>
+
+  <!-- 별 -->
+  <g fill="#EAF6F0">
+    <circle cx="80" cy="60" r="1.4" opacity="0.8"/>
+    <circle cx="150" cy="140" r="1" opacity="0.6"/>
+    <circle cx="230" cy="70" r="1.6" opacity="0.7"/>
+    <circle cx="310" cy="180" r="1" opacity="0.5"/>
+    <circle cx="60" cy="260" r="1.2" opacity="0.6"/>
+    <circle cx="400" cy="90" r="1.3" opacity="0.7"/>
+    <circle cx="470" cy="220" r="1" opacity="0.5"/>
+    <circle cx="540" cy="50" r="1.5" opacity="0.75"/>
+    <circle cx="610" cy="150" r="1" opacity="0.55"/>
+    <circle cx="680" cy="260" r="1.3" opacity="0.6"/>
+    <circle cx="20" cy="380" r="1" opacity="0.45"/>
+    <circle cx="760" cy="110" r="1.4" opacity="0.7"/>
+    <circle cx="820" cy="40" r="1" opacity="0.55"/>
+    <circle cx="880" cy="200" r="1.2" opacity="0.6"/>
+    <circle cx="940" cy="320" r="1" opacity="0.4"/>
+    <circle cx="180" cy="330" r="1.2" opacity="0.5"/>
+    <circle cx="260" cy="400" r="1" opacity="0.4"/>
+    <circle cx="340" cy="300" r="1.3" opacity="0.55"/>
+    <circle cx="120" cy="450" r="1" opacity="0.4"/>
+    <circle cx="500" cy="350" r="1" opacity="0.4"/>
+    <circle cx="1000" cy="70" r="1.4" opacity="0.6"/>
+    <circle cx="1050" cy="260" r="1" opacity="0.4"/>
+    <circle cx="1450" cy="60" r="1.3" opacity="0.6"/>
+    <circle cx="1520" cy="180" r="1" opacity="0.45"/>
+    <circle cx="1400" cy="330" r="1.2" opacity="0.5"/>
+    <circle cx="1560" cy="380" r="1" opacity="0.4"/>
+    <circle cx="1300" cy="90" r="1" opacity="0.4"/>
+    <circle cx="60" cy="150" r="0.9" opacity="0.4"/>
+    <circle cx="900" cy="440" r="0.9" opacity="0.35"/>
+    <circle cx="640" cy="420" r="0.9" opacity="0.35"/>
+  </g>
+
+  <!-- 능선 실루엣 -->
+  <path d="M0,610 L0,540 L70,520 L140,555 L210,500 L300,545 L380,515 L470,560 L560,500
+           L650,540 L740,505 L820,555 L900,520 L980,560 L1080,500 L1180,545 L1280,515
+           L1380,560 L1470,530 L1560,555 L1600,540 L1600,610 Z"
+        fill="#04100F" opacity="0.92"/>
+
+  <!-- 달 -->
+  <circle cx="1220" cy="150" r="230" fill="url(#moonGlow)"/>
+  <circle cx="1220" cy="150" r="86" fill="url(#moonBody)"/>
+  <circle cx="1195" cy="122" r="10" fill="#C9DED4" opacity="0.35"/>
+  <circle cx="1245" cy="108" r="6" fill="#C9DED4" opacity="0.3"/>
+  <circle cx="1204" cy="168" r="13" fill="#C9DED4" opacity="0.28"/>
+  <circle cx="1250" cy="165" r="7" fill="#C9DED4" opacity="0.3"/>
+
+  <!-- 수면 -->
+  <rect x="0" y="610" width="1600" height="290" fill="url(#waterGrad)"/>
+
+  <!-- 잔물결 -->
+  <g stroke="#CFE9DE" stroke-width="1.4" fill="none" opacity="0.14">
+    <path d="M0,650 Q400,644 800,650 T1600,650"/>
+    <path d="M0,690 Q400,684 800,690 T1600,690"/>
+    <path d="M0,740 Q400,733 800,740 T1600,740"/>
+    <path d="M0,800 Q400,792 800,800 T1600,800"/>
+    <path d="M0,860 Q400,852 800,860 T1600,860"/>
+  </g>
+
+  <!-- 달빛 반영 -->
+  <g>
+    <ellipse class="reflection" cx="1220" cy="628" rx="150" ry="16" fill="#F6FBF7" opacity="0.5"/>
+    <ellipse class="reflection-slow" cx="1214" cy="655" rx="120" ry="12" fill="#F6FBF7" opacity="0.42"/>
+    <ellipse class="reflection" cx="1226" cy="682" rx="135" ry="11" fill="#EAF4EE" opacity="0.36"/>
+    <ellipse class="reflection-slow" cx="1210" cy="710" rx="95" ry="9" fill="#EAF4EE" opacity="0.3"/>
+    <ellipse class="reflection" cx="1230" cy="738" rx="110" ry="9" fill="#DCEDE6" opacity="0.26"/>
+    <ellipse class="reflection-slow" cx="1216" cy="766" rx="80" ry="7" fill="#DCEDE6" opacity="0.22"/>
+    <ellipse class="reflection" cx="1224" cy="794" rx="90" ry="7" fill="#CFE9DE" opacity="0.18"/>
+    <ellipse class="reflection-slow" cx="1212" cy="822" rx="65" ry="6" fill="#CFE9DE" opacity="0.15"/>
+    <ellipse class="reflection" cx="1228" cy="850" rx="70" ry="6" fill="#CFE9DE" opacity="0.12"/>
+    <ellipse class="reflection-slow" cx="1218" cy="878" rx="50" ry="5" fill="#CFE9DE" opacity="0.09"/>
+  </g>
+</svg>

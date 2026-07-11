@@ -12,65 +12,62 @@
     return node;
   }
 
-  function renderSite() {
-    const { site } = CONTENT;
-    document.title = site.name + " | " + site.role;
-    setText("heroRole", site.role);
-    setText("heroName", site.name);
-    setText("heroTagline", site.tagline);
-  }
-
   function setText(id, value) {
     const node = document.getElementById(id);
     if (node) node.textContent = value || "";
   }
 
-  // 아웃라인 아이콘 세트 (18x18, stroke=currentColor) — 사이드바 메뉴 항목과 매칭
-  const NAV_ICONS = {
-    "#about":
-      '<svg class="nav-icon" viewBox="0 0 18 18" width="18" height="18" aria-hidden="true"><circle cx="9" cy="6" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3.5 15.2c1-3.2 3-4.7 5.5-4.7s4.5 1.5 5.5 4.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
-    "#approach":
-      '<svg class="nav-icon" viewBox="0 0 18 18" width="18" height="18" aria-hidden="true"><path d="M9 4.6c-1.4-1-3.3-1.3-4.8-1v9.6c1.5-.3 3.4 0 4.8 1 1.4-1 3.3-1.3 4.8-1V3.6c-1.5-.3-3.4 0-4.8 1z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M9 4.6v9.6" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>',
-    "#works":
-      '<svg class="nav-icon" viewBox="0 0 18 18" width="18" height="18" aria-hidden="true"><path d="M3.5 5A1.5 1.5 0 0 1 5 3.5h8A1.5 1.5 0 0 1 14.5 5v6a1.5 1.5 0 0 1-1.5 1.5H8l-3 2.3v-2.3H5A1.5 1.5 0 0 1 3.5 11V5z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>',
-    "#contact":
-      '<svg class="nav-icon" viewBox="0 0 18 18" width="18" height="18" aria-hidden="true"><rect x="3" y="4.5" width="12" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M3.5 5.5l5.5 4.3 5.5-4.3" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-  };
+  function renderSite() {
+    const { site } = CONTENT;
+    document.title = site.name + " | " + site.role;
+
+    const logo = document.getElementById("navLogo");
+    if (logo) logo.textContent = site.name;
+
+    setText("heroTag", site.tagline);
+    setText("heroName", site.name);
+    setText("heroRole", site.role);
+
+    const heroBg = document.getElementById("heroBg");
+    if (heroBg && site.heroImage) heroBg.src = site.heroImage;
+  }
 
   function renderNav() {
-    const list = document.getElementById("navList");
-    if (!list || !CONTENT.nav) return;
-    CONTENT.nav.forEach((item) => {
-      const li = el("li");
+    const menu = document.getElementById("navMenu");
+    if (!menu || !CONTENT.nav) return;
+
+    CONTENT.nav.forEach((item, index) => {
       const a = document.createElement("a");
       a.href = item.href;
-      if (NAV_ICONS[item.href]) a.innerHTML = NAV_ICONS[item.href];
-      a.appendChild(el("span", null, item.label));
-      li.appendChild(a);
-      list.appendChild(li);
+      a.textContent = item.label;
+      if (index === CONTENT.nav.length - 1) a.classList.add("nav__cta");
+      menu.appendChild(a);
     });
 
-    const navLinks = Array.from(list.querySelectorAll("a"));
+    const navLinks = Array.from(menu.querySelectorAll("a"));
+    const nav = document.getElementById("siteNav");
+    const toggle = document.getElementById("navToggle");
 
-    // 모바일 사이드바(드로어) 토글
-    const toggle = document.getElementById("sidebarToggle");
-    const sidebar = document.getElementById("sidebar");
-    const scrim = document.getElementById("scrim");
-
-    function closeSidebar() {
-      if (sidebar) sidebar.classList.remove("open");
+    function closeMenu() {
+      menu.classList.remove("open");
       if (toggle) toggle.setAttribute("aria-expanded", "false");
-      if (scrim) scrim.hidden = true;
     }
 
-    if (toggle && sidebar) {
+    if (toggle) {
       toggle.addEventListener("click", () => {
-        const isOpen = sidebar.classList.toggle("open");
+        const isOpen = menu.classList.toggle("open");
         toggle.setAttribute("aria-expanded", String(isOpen));
-        if (scrim) scrim.hidden = !isOpen;
       });
-      navLinks.forEach((a) => a.addEventListener("click", closeSidebar));
-      if (scrim) scrim.addEventListener("click", closeSidebar);
+      navLinks.forEach((a) => a.addEventListener("click", closeMenu));
+    }
+
+    // 히어로를 벗어나 스크롤하면 내비게이션을 흰 배경으로 전환
+    if (nav) {
+      const onScroll = () => {
+        nav.classList.toggle("nav--scrolled", window.scrollY > 60);
+      };
+      onScroll();
+      window.addEventListener("scroll", onScroll, { passive: true });
     }
 
     // 스크롤 위치에 따라 현재 섹션의 메뉴를 활성 표시
@@ -114,8 +111,8 @@
     renderAboutList("aboutValuesSection", "aboutValues", about.values);
     renderAboutList("aboutStrengthsSection", "aboutStrengths", about.strengths);
     renderAboutList("aboutEducationSection", "aboutEducation", about.education);
-    renderAboutList("aboutCareerSection", "aboutCareer", about.career);
     renderAboutList("aboutCertificationsSection", "aboutCertifications", about.certifications);
+    renderAboutList("aboutCareerSection", "aboutCareer", about.career);
   }
 
   // 빈 문자열("")로 채워진 항목은 아직 확인되지 않은 정보이므로 화면에서 건너뜁니다.
@@ -134,6 +131,35 @@
 
     section.hidden = false;
     visibleItems.forEach((v) => list.appendChild(el("li", null, v)));
+  }
+
+  function renderActivities() {
+    const section = document.getElementById("activitiesSection");
+    const list = document.getElementById("activitiesList");
+    if (!section || !list) return;
+
+    const groups = Array.isArray(CONTENT.activities) ? CONTENT.activities : [];
+    if (groups.length === 0) {
+      section.hidden = true;
+      return;
+    }
+
+    section.hidden = false;
+    groups.forEach((group) => {
+      const groupEl = el("div", "activity-group");
+      groupEl.appendChild(el("span", "card-tag", group.category));
+
+      const ul = el("ul", "activity-items");
+      (group.items || []).forEach((item) => {
+        const li = el("li");
+        li.appendChild(el("strong", null, item.org));
+        li.appendChild(document.createTextNode(" — " + item.desc));
+        ul.appendChild(li);
+      });
+      groupEl.appendChild(ul);
+
+      list.appendChild(groupEl);
+    });
   }
 
   function renderCards(containerId, items, kindLabelKey) {
@@ -171,49 +197,43 @@
 
   function renderContact() {
     const { site, contact } = CONTENT;
+    setText("contactNote", contact && contact.note);
+
     const emailLink = document.getElementById("contactEmailLink");
     if (emailLink) {
       emailLink.textContent = site.email;
       emailLink.href = "mailto:" + site.email;
     }
-    setText("contactNotice", contact && contact.notice);
-
-    const form = document.getElementById("contactForm");
-    if (form) {
-      form.addEventListener("submit", (event) => {
-        event.preventDefault();
-
-        const name = form.name.value.trim();
-        const replyEmail = form.email.value.trim();
-        const message = form.message.value.trim();
-
-        const subject = "[홈페이지 문의] " + name;
-        const body =
-          message +
-          "\n\n---\n회신받을 이메일: " +
-          replyEmail;
-
-        const mailtoUrl =
-          "mailto:" +
-          site.email +
-          "?subject=" +
-          encodeURIComponent(subject) +
-          "&body=" +
-          encodeURIComponent(body);
-
-        window.location.href = mailtoUrl;
-      });
-    }
   }
 
   function renderFooter() {
-    const { site, footer } = CONTENT;
+    const { footer } = CONTENT;
     setText("footerText", footer && footer.copyright);
-    const link = document.getElementById("footerEmailLink");
-    if (link) {
-      link.textContent = site.email;
-      link.href = "mailto:" + site.email;
+  }
+
+  // 섹션이 화면에 들어오면 페이드+살짝 위로 등장. 모션에 민감한 사용자는 존중(reduce-motion).
+  function initReveal() {
+    const targets = document.querySelectorAll(".reveal");
+    if (!targets.length) return;
+
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReduced || !("IntersectionObserver" in window)) {
+      targets.forEach((t) => t.classList.add("reveal--visible"));
+      return;
     }
+
+    const observer = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("reveal--visible");
+            obs.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+    targets.forEach((t) => observer.observe(t));
   }
 
   function init() {
@@ -224,11 +244,13 @@
     renderSite();
     renderNav();
     renderAbout();
+    renderActivities();
     setText("approachIntro", CONTENT.approachIntro);
     renderCards("approachCards", CONTENT.approaches, "tag");
     renderCards("worksCards", CONTENT.works, "type");
     renderContact();
     renderFooter();
+    initReveal();
   }
 
   document.addEventListener("DOMContentLoaded", init);

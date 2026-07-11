@@ -3,142 +3,115 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>허훈 | 상담심리사</title>
-<meta name="description" content="상담심리사 허훈의 소개, 상담기법, 연구·챗봇 결과물을 소개하는 홈페이지입니다." />
+<title>허훈 | 심리상담가</title>
+<meta name="description" content="심리상담가 허훈의 소개, 상담기법, 연구 및 칼럼을 소개하는 홈페이지입니다." />
 <link rel="icon" href="favicon.svg" type="image/svg+xml" />
 <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" as="style" crossorigin
   href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+<link rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo&family=Noto+Serif+KR:wght@400;500&display=swap" />
 <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
 <a class="skip-link" href="#main">본문 바로가기</a>
 
-<div class="app-shell">
+<header class="nav" id="siteNav">
+  <a class="nav__logo" href="#top" id="navLogo"></a>
+  <button class="nav__toggle" id="navToggle" aria-expanded="false" aria-controls="navMenu" aria-label="메뉴 열기">
+    <svg viewBox="0 0 18 18" width="20" height="20" aria-hidden="true"><path d="M3 5h12M3 9h12M3 13h12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+  </button>
+  <nav class="nav__menu" id="navMenu" aria-label="주요 메뉴"></nav>
+</header>
 
-  <div class="mobile-topbar">
-    <a class="brand" href="#top">
-      <span class="brand-name">허훈<em>상담</em></span>
-    </a>
-    <button class="sidebar-toggle" id="sidebarToggle" aria-expanded="false" aria-controls="sidebar" aria-label="메뉴 열기">
-      <svg viewBox="0 0 18 18" width="20" height="20" aria-hidden="true"><path d="M3 5h12M3 9h12M3 13h12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-    </button>
-  </div>
+<main id="main">
 
-  <div class="scrim" id="scrim" hidden></div>
+  <!-- 1. Hero -->
+  <section id="top" class="hero">
+    <img class="hero__bg" id="heroBg" src="" alt="달빛이 비치는 고요한 호수" />
+    <div class="hero__scrim"></div>
+    <div class="hero__inner">
+      <span class="hero__rule"></span>
+      <p class="hero__tag" id="heroTag"></p>
+      <h1 class="hero__name" id="heroName"></h1>
+      <p class="hero__role" id="heroRole"></p>
+    </div>
+  </section>
 
-  <aside class="sidebar" id="sidebar">
-    <a class="brand" href="#top">
-      <span class="brand-name">허훈<em>상담</em></span>
-    </a>
-    <nav class="sidebar-nav" aria-label="주요 메뉴">
-      <ul id="navList"></ul>
-    </nav>
-    <p class="sidebar-caption">상담심리 플랫폼</p>
-  </aside>
+  <!-- 2. About -->
+  <section id="about" class="content-card reveal">
+    <p class="section-label">ABOUT</p>
+    <h2 class="section-title">상담사 소개</h2>
+    <div class="about-grid">
+      <div class="about-photo-wrap">
+        <img id="aboutPhoto" class="about-photo" src="" alt="" hidden />
+      </div>
+      <div class="about-body">
+        <p id="aboutIntro" class="about-intro"></p>
 
-  <main id="main" class="main-area">
-
-    <!-- 1. Hero -->
-    <section id="top" class="hero-card">
-      <img src="assets/moon.svg" alt="" class="hero-moon" aria-hidden="true" />
-      <p class="hero-eyebrow" id="heroRole"></p>
-      <h1 id="heroName"></h1>
-      <p class="hero-tagline" id="heroTagline"></p>
-      <a href="#contact" class="btn btn-hero">상담 문의하기</a>
-    </section>
-
-    <!-- 2. About -->
-    <section id="about" class="content-card">
-      <p class="section-label">ABOUT</p>
-      <h2 class="section-title">소개</h2>
-      <div class="about-grid">
-        <div class="about-photo-wrap">
-          <img id="aboutPhoto" class="about-photo" src="" alt="" hidden />
+        <div id="aboutValuesSection" class="about-subsection">
+          <h3 class="sub-title">가치관</h3>
+          <ul id="aboutValues" class="value-list"></ul>
         </div>
-        <div class="about-body">
-          <p id="aboutIntro" class="about-intro"></p>
 
-          <div id="aboutValuesSection" class="about-subsection">
-            <h3 class="sub-title">가치관</h3>
-            <ul id="aboutValues" class="value-list"></ul>
-          </div>
+        <div id="aboutStrengthsSection" class="about-subsection">
+          <h3 class="sub-title">강점</h3>
+          <ul id="aboutStrengths" class="value-list"></ul>
+        </div>
 
-          <div id="aboutStrengthsSection" class="about-subsection">
-            <h3 class="sub-title">강점</h3>
-            <ul id="aboutStrengths" class="value-list"></ul>
-          </div>
+        <div id="aboutEducationSection" class="about-subsection">
+          <h3 class="sub-title">학력</h3>
+          <ul id="aboutEducation" class="career-list"></ul>
+        </div>
 
-          <div id="aboutEducationSection" class="about-subsection">
-            <h3 class="sub-title">학력</h3>
-            <ul id="aboutEducation" class="career-list"></ul>
-          </div>
+        <div id="aboutCertificationsSection" class="about-subsection">
+          <h3 class="sub-title">자격</h3>
+          <ul id="aboutCertifications" class="career-list"></ul>
+        </div>
 
-          <div id="aboutCareerSection" class="about-subsection">
-            <h3 class="sub-title">경력</h3>
-            <ul id="aboutCareer" class="career-list"></ul>
-          </div>
-
-          <div id="aboutCertificationsSection" class="about-subsection">
-            <h3 class="sub-title">자격</h3>
-            <ul id="aboutCertifications" class="career-list"></ul>
-          </div>
+        <div id="aboutCareerSection" class="about-subsection">
+          <h3 class="sub-title">경력</h3>
+          <ul id="aboutCareer" class="career-list"></ul>
         </div>
       </div>
-    </section>
+    </div>
 
-    <!-- 3. Approach -->
-    <section id="approach" class="content-card">
-      <p class="section-label">APPROACH</p>
-      <h2 class="section-title">주요 상담기법</h2>
-      <p id="approachIntro" class="approach-intro"></p>
-      <div id="approachCards" class="card-grid"></div>
-    </section>
+    <div id="activitiesSection" class="activities">
+      <h3 class="sub-title">활동</h3>
+      <div id="activitiesList" class="activities-list"></div>
+    </div>
+  </section>
 
-    <!-- 4. Works -->
-    <section id="works" class="content-card">
-      <p class="section-label">WORKS</p>
-      <h2 class="section-title">연구·챗봇</h2>
-      <div id="worksCards" class="card-grid"></div>
-    </section>
+  <!-- 3. Approach -->
+  <section id="approach" class="content-card reveal">
+    <p class="section-label">APPROACH</p>
+    <h2 class="section-title">주 상담기법</h2>
+    <p id="approachIntro" class="approach-intro"></p>
+    <div id="approachCards" class="card-grid"></div>
+  </section>
 
-    <!-- 5. Contact -->
-    <section id="contact" class="content-card">
-      <p class="section-label">CONTACT</p>
-      <h2 class="section-title">문의</h2>
-      <p class="contact-intro">아래 폼을 작성하시면 메일 앱이 열리며, 내용을 확인하신 뒤 전송 버튼을 눌러주시면 됩니다.</p>
+  <!-- 4. Works -->
+  <section id="works" class="content-card reveal">
+    <p class="section-label">COLUMN</p>
+    <h2 class="section-title">연구 및 칼럼</h2>
+    <div id="worksCards" class="card-grid"></div>
+  </section>
 
-      <form id="contactForm" class="contact-form" novalidate>
-        <div class="form-row">
-          <label for="cf-name">이름</label>
-          <input type="text" id="cf-name" name="name" required autocomplete="name" />
-        </div>
-        <div class="form-row">
-          <label for="cf-email">회신받을 이메일</label>
-          <input type="email" id="cf-email" name="email" required autocomplete="email" />
-        </div>
-        <div class="form-row">
-          <label for="cf-message">문의 내용</label>
-          <textarea id="cf-message" name="message" rows="6" required></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">보내기</button>
-      </form>
+  <!-- 5. Contact -->
+  <section id="contact" class="contact reveal">
+    <h2 class="contact__title">상담 문의</h2>
+    <p class="contact__note" id="contactNote"></p>
+    <a class="contact__mail" id="contactEmailLink" href=""></a>
+  </section>
 
-      <p class="contact-direct">
-        메일 앱이 열리지 않는다면 아래 이메일로 직접 연락해 주세요:
-        <a id="contactEmailLink" href=""></a>
-      </p>
-      <p id="contactNotice" class="contact-notice"></p>
-    </section>
+  <footer class="site-footer">
+    <p id="footerText"></p>
+  </footer>
 
-    <footer class="site-footer">
-      <p id="footerText"></p>
-      <p><a id="footerEmailLink" href=""></a></p>
-    </footer>
-
-  </main>
-</div>
+</main>
 
 <script src="data/content.js"></script>
 <script src="js/render.js"></script>
