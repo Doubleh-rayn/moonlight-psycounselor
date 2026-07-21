@@ -3,7 +3,7 @@
 // 비밀번호는 Vercel 프로젝트의 환경변수 ADMIN_PASSWORD에 설정합니다(코드에는 저장하지 않음).
 
 const crypto = require("crypto");
-const { kv } = require("@vercel/kv");
+const { getClient } = require("./_lib/redis");
 const { serializeCookie } = require("./_lib/cookies");
 const { SESSION_COOKIE } = require("./_lib/auth");
 
@@ -23,9 +23,11 @@ module.exports = async (req, res) => {
     return;
   }
 
+  const client = await getClient();
+
   const ip = req.headers["x-forwarded-for"] || req.socket?.remoteAddress || "unknown";
   const attemptsKey = `login-attempts:${ip}`;
-  const attempts = (await kv.get(attemptsKey)) || 0;
+  const attempts = parseInt((await client.get(attemptsKey)) || "0", 10);
   if (attempts >= MAX_ATTEMPTS) {
     res.status(429).json({ error: "로그인 시도가 너무 많습니다. 잠시 후 다시 시도해 주세요." });
     return;
@@ -38,15 +40,15 @@ module.exports = async (req, res) => {
   }
 
   if (password !== adminPassword) {
-    await kv.set(attemptsKey, attempts + 1, { ex: LOCK_WINDOW_SECONDS });
+    await client.set(attemptsKey, String(attempts + 1), { EX: LOCK_WINDOW_SECONDS });
     res.status(401).json({ error: "비밀번호가 올바르지 않습니다." });
     return;
   }
 
-  await kv.del(attemptsKey);
+  await client.del(attemptsKey);
 
   const token = crypto.randomBytes(24).toString("hex");
-  await kv.set(`session:${token}`, "1", { ex: SESSION_TTL_SECONDS });
+  await client.set(`session:${token}`, "1", { EX: SESSION_TTL_SECONDS });
 
   res.setHeader(
     "Set-Cookie",

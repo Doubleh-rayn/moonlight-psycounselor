@@ -1,8 +1,8 @@
 // api/content.js
-// GET  — 누구나 호출 가능. Vercel KV에 저장된 콘텐츠가 있으면 그것을, 없으면 data/content.json 기본값을 반환합니다.
-// PUT  — 로그인(관리자 세션 쿠키)한 사용자만 호출 가능. 새 콘텐츠를 KV에 저장합니다.
+// GET  — 누구나 호출 가능. Redis에 저장된 콘텐츠가 있으면 그것을, 없으면 data/content.json 기본값을 반환합니다.
+// PUT  — 로그인(관리자 세션 쿠키)한 사용자만 호출 가능. 새 콘텐츠를 Redis에 저장합니다.
 
-const { kv } = require("@vercel/kv");
+const { getClient } = require("./_lib/redis");
 const { isAuthenticated } = require("./_lib/auth");
 const defaultContent = require("../data/content.json");
 
@@ -23,12 +23,13 @@ function isValidContent(body) {
 module.exports = async (req, res) => {
   if (req.method === "GET") {
     try {
-      const stored = await kv.get(CONTENT_KEY);
-      const content = stored || readDefaultContent();
+      const client = await getClient();
+      const stored = await client.get(CONTENT_KEY);
+      const content = stored ? JSON.parse(stored) : readDefaultContent();
       res.setHeader("Cache-Control", "no-store");
       res.status(200).json(content);
     } catch (err) {
-      // KV를 아직 연결하지 않은 상태(로컬 미리보기 등)에서도 사이트가 뜨도록 기본값으로 대체
+      // Redis를 아직 연결하지 않은 상태(로컬 미리보기 등)에서도 사이트가 뜨도록 기본값으로 대체
       res.setHeader("Cache-Control", "no-store");
       res.status(200).json(readDefaultContent());
     }
@@ -48,7 +49,8 @@ module.exports = async (req, res) => {
       return;
     }
 
-    await kv.set(CONTENT_KEY, body);
+    const client = await getClient();
+    await client.set(CONTENT_KEY, JSON.stringify(body));
     res.status(200).json({ ok: true });
     return;
   }
