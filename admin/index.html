@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>관리자 편집 | 허훈</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" />
+<link rel="stylesheet" as="style" crossorigin
+  href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+<link rel="stylesheet" href="../css/style.css" />
+<link rel="stylesheet" href="admin.css" />
+</head>
+<body class="admin-body">
+
+<!-- 로그인 화면 -->
+<section id="loginScreen" class="login-screen">
+  <form id="loginForm" class="login-card" novalidate>
+    <h1 class="login-title">관리자 로그인</h1>
+    <p class="login-sub">비밀번호를 입력하면 홈페이지 문구를 웹에서 바로 수정할 수 있습니다.</p>
+    <div class="form-row">
+      <label for="loginPassword">비밀번호</label>
+      <input type="password" id="loginPassword" name="password" autocomplete="current-password" required />
+    </div>
+    <p id="loginError" class="login-error" hidden></p>
+    <button type="submit" class="btn btn-primary" id="loginSubmit">로그인</button>
+    <a class="login-back" href="../index.html">← 홈페이지로 돌아가기</a>
+  </form>
+</section>
+
+<!-- 편집 화면 -->
+<div id="editorScreen" class="editor-screen" hidden>
+  <header class="editor-header">
+    <span class="editor-header-title">허훈상담 · 관리자 편집</span>
+    <div class="editor-header-actions">
+      <a href="../index.html" target="_blank" rel="noopener" class="btn-ghost-small">사이트 보기 ↗</a>
+      <button type="button" id="logoutBtn" class="btn-ghost-small">로그아웃</button>
+    </div>
+  </header>
+
+  <main class="editor-main">
+    <p id="saveStatus" class="save-status" role="status" aria-live="polite"></p>
+    <div id="editorRoot"></div>
+    <div class="save-bar">
+      <button type="button" id="saveBtn" class="btn btn-primary">저장하기</button>
+    </div>
+  </main>
+</div>
+
+<script src="admin.js"></script>
+</body>
+</html>

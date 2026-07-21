@@ -1,0 +1,9 @@
+{
+  "name": "counselor-site",
+  "private": true,
+  "version": "1.0.0",
+  "description": "허훈 상담심리사 홈페이지 — 정적 프론트엔드 + Vercel 서버리스 관리자 편집 기능",
+  "dependencies": {
+    "@vercel/kv": "^2.0.0"
+  }
+}

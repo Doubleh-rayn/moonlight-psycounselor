@@ -1,9 +1,26 @@
 // js/render.js
-// data/content.js 의 CONTENT 객체를 읽어 화면을 자동으로 그립니다.
-// 이 파일은 수정할 필요가 없습니다. 내용을 바꾸려면 data/content.js를 수정하세요.
+// 콘텐츠(CONTENT)를 읽어 화면을 자동으로 그립니다.
+// 이 파일은 수정할 필요가 없습니다. 내용을 바꾸려면 /admin 관리자 페이지에서 수정하세요.
+//
+// 콘텐츠는 다음 순서로 불러옵니다.
+//   1) /api/content — Vercel에 배포되어 있으면 관리자 페이지에서 저장한 최신 내용을 받아옵니다.
+//   2) data/content.json — 위 API를 쓸 수 없을 때(로컬 미리보기 등) 사용하는 기본값입니다.
 
 (function () {
   "use strict";
+
+  let CONTENT = null;
+
+  async function loadContent() {
+    try {
+      const res = await fetch("/api/content", { cache: "no-store" });
+      if (res.ok) return await res.json();
+    } catch (err) {
+      // /api 서버리스 함수가 없는 환경(로컬 정적 미리보기 등) — 기본 파일로 대체
+    }
+    const fallback = await fetch("data/content.json", { cache: "no-store" });
+    return await fallback.json();
+  }
 
   function el(tag, className, text) {
     const node = document.createElement(tag);
@@ -236,9 +253,11 @@
     targets.forEach((t) => observer.observe(t));
   }
 
-  function init() {
-    if (typeof CONTENT === "undefined") {
-      console.error("CONTENT를 찾을 수 없습니다. data/content.js가 먼저 로드되어야 합니다.");
+  async function init() {
+    try {
+      CONTENT = await loadContent();
+    } catch (err) {
+      console.error("콘텐츠를 불러오지 못했습니다.", err);
       return;
     }
     renderSite();
