@@ -58,7 +58,9 @@ body {
   font-family: var(--font-sans);
   font-weight: 400;
   color: var(--text-body);
-  background: var(--bg-page);
+  background:
+    linear-gradient(rgba(8, 24, 24, 0.35), rgba(8, 24, 24, 0.35)),
+    url("../assets/hero-moon-lake.jpg") center / cover fixed;
   line-height: 1.7;
   font-size: 15px;
   -webkit-font-smoothing: antialiased;
