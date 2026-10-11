@@ -1,5 +1,12 @@
-import { Placeholder } from "@/components/layout/Placeholder";
+"use client";
 
-export default function Page() {
-  return <Placeholder title="습관 추가" stage={8} />;
+import { AppShell } from "@/components/layout/AppShell";
+import { NewHabitScreen } from "@/components/habits/NewHabitScreen";
+
+export default function NewHabitPage() {
+  return (
+    <AppShell>
+      <NewHabitScreen />
+    </AppShell>
+  );
 }
