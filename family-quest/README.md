@@ -21,7 +21,12 @@ src/components/ui/      공통 부품: Card, Button, IconTile, CheckButton, Prog
 src/components/today/   오늘 화면 전용 구성 요소
 src/lib/design/         디자인 토큰 매핑 (toneStyle)
 src/lib/date.ts         Asia/Seoul 기준 날짜 계산 (+ 테스트)
-src/lib/mock/           1단계 임시 데이터 (4단계에서 Supabase 로 교체)
+src/lib/repo/           저장소 인터페이스 + Supabase 구현 + 데모용 메모리 구현
+src/lib/store/          가족 데이터 스토어 (낙관적 업데이트, 실시간 재조회)
+src/lib/stats/          달성률·스티커 잔액 계산 (+ 테스트)
+src/lib/plan/           계획 계산(8절)·퀘스트 생성·단계 판정 (+ 테스트)
+supabase/               마이그레이션 SQL, RLS 테스트
+e2e/                    데모 모드 브라우저 흐름 검증 스크립트
 src/lib/bmi/            소아청소년 BMI 백분위수 판정 (LMS, 순수 함수 + 테스트)
 data/bmi_lms_2017.json  2017 소아청소년 성장도표 연령별 BMI LMS 표 (성별·월령 24~227)
 ```
@@ -29,11 +34,37 @@ data/bmi_lms_2017.json  2017 소아청소년 성장도표 연령별 BMI LMS 표 
 ## 진행
 
 - [x] 1단계 뼈대와 디자인 시스템
-- [ ] 2단계 데이터베이스
-- [ ] 3단계 로그인과 프로필
-- [ ] 4단계 퀘스트 체크와 실시간 동기화
-- [ ] 5단계 달성률과 기록
-- [ ] 6단계 스티커와 보상
-- [ ] 7단계 계획 계산과 퀘스트 지도
-- [ ] 8단계 습관 추가와 승인
-- [ ] 9단계 PWA 와 배포
+- [x] 2단계 데이터베이스 (`supabase/`)
+- [x] 3단계 로그인과 프로필
+- [x] 4단계 퀘스트 체크와 실시간 동기화
+- [x] 5단계 달성률과 기록
+- [x] 6단계 스티커와 보상
+- [x] 7단계 계획 계산과 퀘스트 지도
+- [x] 8단계 습관 추가와 승인
+- [x] 9단계 PWA 와 배포 안내 (아래)
+
+제가 임의로 정한 사항은 [docs/DECISIONS.md](./docs/DECISIONS.md) 에 있습니다.
+
+## 데모 모드
+
+`.env.local` 이 없으면 브라우저 메모리(localStorage)로 동작합니다. 로그인 화면의 **데모 가족으로 시작** 버튼을 누르면
+예시 가족(엄마·아빠·지우·하준, PIN 1234)이 만들어집니다. 같은 브라우저의 다른 탭에서 변경이 바로 반영됩니다.
+
+## Supabase 연결
+
+[supabase/README.md](./supabase/README.md) 의 순서대로 마이그레이션을 적용하고 `.env.local` 에 URL 과 anon key 를 넣습니다.
+
+## Vercel 배포
+
+1. GitHub 저장소를 Vercel 에 연결한다.
+2. 프로젝트 설정 → **Root Directory** 를 `family-quest` 로 지정한다 (저장소 루트는 다른 사이트).
+3. Environment Variables 에 `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` 를 넣는다.
+4. 배포 후 휴대폰 브라우저에서 접속 → 공유 메뉴 → "홈 화면에 추가". (iOS Safari, Android Chrome 모두 가능)
+
+## 검증
+
+```bash
+npm test                          # 순수 함수 테스트 (날짜, 달성률, 스티커, BMI, 계획 계산, 판정)
+bash supabase/tests/run_local.sh  # 로컬 PostgreSQL 에서 마이그레이션 + RLS 검증
+node e2e/stage4.mjs               # 브라우저 흐름 검증 (e2e/README.md)
+```
