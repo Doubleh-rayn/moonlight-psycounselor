@@ -6,6 +6,7 @@ import { ToastProvider } from "./Toast";
 import { PinGateProvider } from "./PinGate";
 import { AppGate } from "./AppGate";
 import { DemoBanner } from "./DemoBanner";
+import { PlanMaintenance } from "./PlanMaintenance";
 
 export function Providers({ children }: { children: ReactNode }) {
   return (
@@ -13,6 +14,7 @@ export function Providers({ children }: { children: ReactNode }) {
       <FamilyStoreProvider>
         <PinGateProvider>
           <DemoBanner />
+          <PlanMaintenance />
           <AppGate>{children}</AppGate>
         </PinGateProvider>
       </FamilyStoreProvider>

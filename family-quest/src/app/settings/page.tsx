@@ -1,5 +1,12 @@
-import { Placeholder } from "@/components/layout/Placeholder";
+"use client";
 
-export default function Page() {
-  return <Placeholder title="설정" stage={3} />;
+import { AppShell } from "@/components/layout/AppShell";
+import { SettingsScreen } from "@/components/settings/SettingsScreen";
+
+export default function SettingsPage() {
+  return (
+    <AppShell>
+      <SettingsScreen />
+    </AppShell>
+  );
 }

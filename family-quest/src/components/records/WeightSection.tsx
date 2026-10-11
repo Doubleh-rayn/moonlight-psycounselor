@@ -5,13 +5,12 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Sheet } from "@/components/ui/Sheet";
 import { Field, TextInput } from "@/components/ui/Field";
-import { ProgressBar } from "@/components/ui/ProgressBar";
 import { useReadyFamily } from "@/lib/store/FamilyStore";
 import { useActions } from "@/lib/store/actions";
 import { usePinGate } from "@/components/app/PinGate";
 import { useToast } from "@/components/app/Toast";
-import { activePlanOf, currentWeek, STAGE_LABEL, stageNo } from "@/lib/plan/progress";
-import { MEDICAL_DISCLAIMER } from "@/lib/plan/constants";
+import { activePlanOf, currentWeek } from "@/lib/plan/progress";
+import { WeekGuide } from "@/components/plan/WeekGuide";
 import { applyProgressAdjustment } from "@/lib/plan/adjust";
 import { formatShortDate } from "@/lib/date";
 import type { MemberRow, WeightLogRow } from "@/lib/db/types";
@@ -85,28 +84,8 @@ export function WeightSection({ member }: { member: MemberRow }) {
       )}
 
       {plan && week && (
-        <div className="mt-4 rounded-[16px] bg-mint p-3 text-mint-deep">
-          <p className="text-[13px] font-bold">
-            이번 주 가이드 · {stageNo(week.stage)}단계 {STAGE_LABEL[week.stage]} ({week.week_no}주차)
-          </p>
-          <div className="mt-2 grid grid-cols-3 gap-2 text-center">
-            <div>
-              <p className="text-[11px] opacity-80">식단 감소</p>
-              <p className="text-[15px] font-extrabold">{Math.round(week.diet_kcal)} kcal</p>
-            </div>
-            <div>
-              <p className="text-[11px] opacity-80">운동 증가</p>
-              <p className="text-[15px] font-extrabold">{Math.round(week.exercise_kcal)} kcal</p>
-            </div>
-            <div>
-              <p className="text-[11px] opacity-80">주간 운동</p>
-              <p className="text-[15px] font-extrabold">{Math.round(week.exercise_minutes_per_week)}분</p>
-            </div>
-          </div>
-          <ProgressBar className="mt-2" value={week.diet_ratio * 100} color="var(--color-graph-mint)" height={8} label={`식단 ${Math.round(week.diet_ratio * 100)} : 운동 ${Math.round((1 - week.diet_ratio) * 100)}`} />
-          <p className="mt-1 text-[11px] opacity-80">
-            식단 {Math.round(week.diet_ratio * 10)} : 운동 {Math.round((1 - week.diet_ratio) * 10)} · {MEDICAL_DISCLAIMER}
-          </p>
+        <div className="mt-4">
+          <WeekGuide week={week} />
         </div>
       )}
 

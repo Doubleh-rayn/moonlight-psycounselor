@@ -1,5 +1,12 @@
-import { Placeholder } from "@/components/layout/Placeholder";
+"use client";
 
-export default function Page() {
-  return <Placeholder title="퀘스트" stage={7} />;
+import { AppShell } from "@/components/layout/AppShell";
+import { QuestMapScreen } from "@/components/quest/QuestMapScreen";
+
+export default function QuestPage() {
+  return (
+    <AppShell>
+      <QuestMapScreen />
+    </AppShell>
+  );
 }
