@@ -9,6 +9,9 @@ import { useToast } from "@/components/app/Toast";
 import { DEMO_EMAIL, DEMO_PASSWORD, seedDemo } from "@/lib/repo/demoSeed";
 import type { MemoryRepo } from "@/lib/repo/memory";
 import { toLoginEmail } from "@/lib/auth/ids";
+import Link from "next/link";
+import { CircleHelp } from "lucide-react";
+import { toneStyle } from "@/lib/design/tokens";
 
 export default function LoginPage() {
   const { signIn, signUp, demo, repo } = useFamily();
@@ -49,8 +52,20 @@ export default function LoginPage() {
 
   return (
     <main className="mx-auto flex w-full max-w-[480px] flex-1 flex-col justify-center px-4 py-8">
-      <h1 className="text-[28px] font-extrabold">가족 퀘스트</h1>
-      <p className="mt-1 text-[14px] font-medium text-muted">자기 아이디로 로그인하면 바로 내 화면이 열립니다</p>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h1 className="text-[28px] font-extrabold">가족 퀘스트</h1>
+          <p className="mt-1 text-[14px] font-medium text-muted">자기 아이디로 로그인하면 바로 내 화면이 열립니다</p>
+        </div>
+        <Link
+          href="/guide"
+          className="flex min-h-[44px] shrink-0 items-center gap-1.5 rounded-[14px] bg-(--face) px-3 text-[14px] font-bold text-(--deep) raised-3"
+          style={toneStyle("lavender")}
+        >
+          <CircleHelp size={18} strokeWidth={2.2} aria-hidden />
+          이용방법
+        </Link>
+      </div>
 
       <Card className="mt-5">
         <form onSubmit={submit} className="flex flex-col gap-3">

@@ -12,6 +12,8 @@ import { useFamily } from "@/lib/store/FamilyStore";
 import { Button } from "@/components/ui/Button";
 
 const PUBLIC = new Set(["/login"]);
+/** 로그인 여부와 무관하게 항상 열 수 있는 화면 */
+const ALWAYS = new Set(["/guide"]);
 
 function Splash({ text }: { text: string }) {
   return (
@@ -28,12 +30,14 @@ export function AppGate({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   const isPublic = PUBLIC.has(pathname);
+  const isAlways = ALWAYS.has(pathname);
   const isSetup = pathname === "/setup";
   const isProfiles = pathname === "/profiles";
 
   // 리다이렉트 결정
   let target: string | null = null;
-  if (authStatus === "signed_out" && !isPublic) target = "/login";
+  if (isAlways) target = null;
+  else if (authStatus === "signed_out" && !isPublic) target = "/login";
   else if (authStatus === "signed_in") {
     if (familyStatus === "none" && !isSetup) target = "/setup";
     else if (familyStatus === "ready") {
@@ -47,6 +51,7 @@ export function AppGate({ children }: { children: ReactNode }) {
     if (target && target !== pathname) router.replace(target);
   }, [target, pathname, router]);
 
+  if (isAlways) return <>{children}</>;
   if (isPublic && authStatus !== "signed_in") return <>{children}</>;
   if (authStatus === "loading") return <Splash text="확인 중…" />;
   if (target && target !== pathname) return <Splash text="이동 중…" />;

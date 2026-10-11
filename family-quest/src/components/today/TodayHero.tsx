@@ -25,7 +25,7 @@ export function TodayHero() {
 
   return (
     <header
-      className="rounded-b-hero bg-(--face) text-(--deep) raised-hero px-5 pb-6 pt-[max(20px,env(safe-area-inset-top))]"
+      className="rounded-b-hero bg-(--face) text-(--deep) raised-hero px-5 pb-6 pt-3"
       style={toneStyle("hero")}
     >
       <div className="flex items-start justify-between gap-3">

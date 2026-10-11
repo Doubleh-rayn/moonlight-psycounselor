@@ -7,7 +7,7 @@ export function DemoBanner() {
   const { demo, online } = useFamily();
   if (!demo && online) return null;
   return (
-    <div className="sticky top-0 z-30 mx-auto w-full max-w-[480px] px-4 pt-2" role="status">
+    <div className="mx-auto w-full max-w-[480px] px-4 pt-2" role="status">
       {!online && (
         <div className="rounded-[14px] bg-peach px-3 py-2 text-center text-[13px] font-bold text-peach-deep">
           인터넷 연결이 필요합니다. 연결되면 다시 체크할 수 있습니다.
