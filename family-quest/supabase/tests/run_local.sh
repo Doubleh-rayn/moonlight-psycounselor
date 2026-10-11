@@ -9,5 +9,5 @@ run() { if [ "$(id -u)" = "0" ]; then su postgres -c "$*"; else "$@"; fi; }
 run "dropdb --if-exists $DB"
 run "createdb $DB"
 run "$PSQL -d $DB -f supabase/tests/00_local_stub.sql"
-run "$PSQL -d $DB -f supabase/migrations/0001_init.sql"
+for f in supabase/migrations/*.sql; do run "$PSQL -d $DB -f $f"; done
 run "$PSQL -d $DB -f supabase/tests/10_rls_test.sql"
