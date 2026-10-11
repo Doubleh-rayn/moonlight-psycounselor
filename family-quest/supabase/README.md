@@ -13,6 +13,11 @@ NEXT_PUBLIC_SUPABASE_URL=https://xxxx.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
 ```
 
+## 적용 상태
+
+프로젝트 `vtchhevvqqizjzmxhqtw` 에 마이그레이션 `family_quest_init` 이 적용되어 있다 (2026-10-11).
+같은 프로젝트에 다른 앱의 테이블(`goals` 등)이 있어, 이 앱의 목표 테이블 이름은 `quests` 다.
+
 ## 구조 요약
 
 - 모든 테이블에 `family_id` 가 있고, RLS 정책은 `family_id = my_family_id()` 하나다.

@@ -208,7 +208,7 @@ export type Database = {
         PlanWeekRow,
         "daily_deficit" | "diet_kcal" | "exercise_kcal" | "exercise_minutes_per_week" | "passed" | "extended"
       >;
-      goals: Table<
+      quests: Table<
         GoalRow,
         | "category"
         | "measure"
@@ -253,7 +253,7 @@ export type Database = {
 /** Realtime 으로 구독하는 테이블 (PLAN.md 5.7 + 화면 갱신에 필요한 것) */
 export const REALTIME_TABLES = [
   "checkins",
-  "goals",
+  "quests",
   "redemptions",
   "weight_logs",
   "cheers",

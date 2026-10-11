@@ -7,7 +7,7 @@ import type { InsertInput } from "@/lib/repo/types";
 import { DIET_QUEST_OPTIONS, EXERCISE_SESSIONS, WALK_SESSION_MIN } from "./constants";
 import type { StageWeek } from "./calc";
 
-export type GoalDraft = InsertInput<"goals">;
+export type GoalDraft = InsertInput<"quests">;
 
 /**
  * 식단 kcal 에 가장 가까운 대체 퀘스트 조합 (각 항목 0~1회).

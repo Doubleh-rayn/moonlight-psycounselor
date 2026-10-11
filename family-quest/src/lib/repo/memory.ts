@@ -42,7 +42,7 @@ function emptyTables(): Tables {
     members: [],
     plans: [],
     plan_weeks: [],
-    goals: [],
+    quests: [],
     goal_changes: [],
     checkins: [],
     rewards: [],
@@ -66,7 +66,7 @@ const DEFAULTS: { [T in TableName]?: Partial<Row<T>> } = {
   members: { is_minor: false, birth_year_month: null, sex: null, height_cm: null, sort_order: 0, active: true },
   plans: { activity_level: "light", kind: "loss", status: "active" },
   plan_weeks: { daily_deficit: 0, diet_kcal: 0, exercise_kcal: 0, exercise_minutes_per_week: 0, passed: null, extended: false },
-  goals: {
+  quests: {
     category: null, measure: "done", target_value: 1, days_of_week: [], weekly_target: null, stickers: 1,
     status: "approved", source: "manual", plan_id: null, plan_stage: null, created_by_member_id: null, active: true,
   },
@@ -256,7 +256,7 @@ export class MemoryRepo implements FamilyRepo {
     const t = this.state.tables;
     const inFamily = <R extends { family_id: string }>(rows: R[]) => rows.filter((r) => r.family_id === fid);
     const members = inFamily(t.members).sort((a, b) => a.sort_order - b.sort_order);
-    const goals = inFamily(t.goals);
+    const goals = inFamily(t.quests);
     const checkins = inFamily(t.checkins).filter((c) => c.date >= checkinsFrom);
     const rewards = inFamily(t.rewards);
     const redemptions = inFamily(t.redemptions);

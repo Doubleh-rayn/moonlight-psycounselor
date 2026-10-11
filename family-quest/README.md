@@ -57,7 +57,7 @@ data/bmi_lms_2017.json  2017 소아청소년 성장도표 연령별 BMI LMS 표 
 ## Vercel 배포
 
 1. GitHub 저장소를 Vercel 에 연결한다.
-2. 프로젝트 설정 → **Root Directory** 를 `family-quest` 로 지정한다 (저장소 루트는 다른 사이트).
+2. 프로젝트 설정 → **Root Directory** 를 `family-quest` 로 지정한다 (저장소 루트는 다른 사이트). 이미 `family-quest` 프로젝트가 이렇게 만들어져 있다.
 3. Environment Variables 에 `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` 를 넣는다.
 4. 배포 후 휴대폰 브라우저에서 접속 → 공유 메뉴 → "홈 화면에 추가". (iOS Safari, Android Chrome 모두 가능)
 

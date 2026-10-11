@@ -29,9 +29,9 @@ begin
   select id into kid from public.members where family_id = fid and display_name = '아이';
 
   -- 개인 목표 (스티커 2) 와 가족 공동 목표 (스티커 3)
-  insert into public.goals (family_id, owner_member_id, type, title, days_of_week, stickers)
+  insert into public.quests (family_id, owner_member_id, type, title, days_of_week, stickers)
   values (fid, mom, 'exercise', '빠르게 걷기 30분', '{1,3,5}', 2) returning id into g_personal;
-  insert into public.goals (family_id, owner_member_id, type, title, days_of_week, stickers)
+  insert into public.quests (family_id, owner_member_id, type, title, days_of_week, stickers)
   values (fid, null, 'exercise', '저녁 산책', '{1,2,3,4,5,6,0}', 3) returning id into g_family;
 
   -- 엄마 개인 체크 2일 완료 → 4
@@ -112,7 +112,7 @@ begin
   if public.my_family_id() is not null then raise exception 'B 는 가족이 없어야 한다'; end if;
   select count(*) into n from public.families;    if n <> 0 then raise exception 'B 가 families % 행을 본다', n; end if;
   select count(*) into n from public.members;     if n <> 0 then raise exception 'B 가 members % 행을 본다', n; end if;
-  select count(*) into n from public.goals;       if n <> 0 then raise exception 'B 가 goals % 행을 본다', n; end if;
+  select count(*) into n from public.quests;       if n <> 0 then raise exception 'B 가 goals % 행을 본다', n; end if;
   select count(*) into n from public.checkins;    if n <> 0 then raise exception 'B 가 checkins % 행을 본다', n; end if;
   select count(*) into n from public.rewards;     if n <> 0 then raise exception 'B 가 rewards % 행을 본다', n; end if;
   select count(*) into n from public.redemptions; if n <> 0 then raise exception 'B 가 redemptions % 행을 본다', n; end if;

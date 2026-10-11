@@ -26,7 +26,7 @@ export function PendingGoals({ member }: { member: MemberRow }) {
     await run(
       "승인",
       (s) => ({ ...s, goals: s.goals.map((x) => (x.id === g.id ? { ...x, ...patch } : x)) }),
-      (repo) => repo.update("goals", g.id, patch),
+      (repo) => repo.update("quests", g.id, patch),
     ).catch(() => {});
     toast(approve ? "승인했습니다. 오늘부터 시작합니다." : "제안을 거절했습니다");
   };

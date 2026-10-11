@@ -1,5 +1,8 @@
 -- 로컬 PostgreSQL 에서 마이그레이션을 검증하기 위한 Supabase 흉내.
 -- 실제 Supabase 에는 적용하지 않는다.
+-- Supabase 는 확장을 extensions 스키마에 설치한다
+create schema if not exists extensions;
+create extension if not exists pgcrypto with schema extensions;
 create schema if not exists auth;
 create table if not exists auth.users (
   id uuid primary key,

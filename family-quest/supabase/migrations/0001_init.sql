@@ -85,7 +85,7 @@ create table public.plan_weeks (
   unique (plan_id, week_no)
 );
 
-create table public.goals (
+create table public.quests (
   id uuid primary key default gen_random_uuid(),
   family_id uuid not null references public.families (id) on delete cascade,
   -- null 이면 가족 공동 목표
@@ -110,12 +110,12 @@ create table public.goals (
   check (type <> 'habit' or category is not null),
   check (cardinality(days_of_week) > 0 or weekly_target is not null)
 );
-create index goals_family_idx on public.goals (family_id, active);
+create index quests_family_idx on public.quests (family_id, active);
 
 create table public.goal_changes (
   id uuid primary key default gen_random_uuid(),
   family_id uuid not null references public.families (id) on delete cascade,
-  goal_id uuid not null references public.goals (id) on delete cascade,
+  goal_id uuid not null references public.quests (id) on delete cascade,
   old_target numeric(6, 1),
   new_target numeric(6, 1),
   changed_by uuid references public.members (id) on delete set null,
@@ -125,7 +125,7 @@ create table public.goal_changes (
 create table public.checkins (
   id uuid primary key default gen_random_uuid(),
   family_id uuid not null references public.families (id) on delete cascade,
-  goal_id uuid not null references public.goals (id) on delete cascade,
+  goal_id uuid not null references public.quests (id) on delete cascade,
   member_id uuid not null references public.members (id) on delete cascade,
   date date not null,
   value numeric(6, 1) not null default 0 check (value >= 0),
@@ -221,7 +221,7 @@ as
 with earned as (
   select c.member_id, sum(g.stickers)::integer as amount
   from public.checkins c
-  join public.goals g on g.id = c.goal_id
+  join public.quests g on g.id = c.goal_id
   where c.done and g.owner_member_id is not null
   group by c.member_id
 ),
@@ -255,7 +255,7 @@ as
 with family_days as (
   -- 가족 공동 목표 × 날짜별로 완료한 구성원 수
   select g.family_id, g.id as goal_id, g.stickers, c.date, count(distinct c.member_id) as done_count
-  from public.goals g
+  from public.quests g
   join public.checkins c on c.goal_id = g.id and c.done
   where g.owner_member_id is null
   group by g.family_id, g.id, g.stickers, c.date
@@ -294,7 +294,7 @@ returns uuid
 language sql
 stable
 security definer
-set search_path = public
+set search_path = public, extensions
 as $$
   select id from public.families where owner_user_id = auth.uid() limit 1
 $$;
@@ -307,14 +307,14 @@ create or replace function public.set_admin_pin(pin text)
 returns void
 language plpgsql
 security definer
-set search_path = public
+set search_path = public, extensions
 as $$
 begin
   if pin !~ '^\d{4}$' then
     raise exception 'PIN 은 숫자 4자리여야 합니다' using errcode = '22023';
   end if;
   update public.families
-  set admin_pin_hash = crypt(pin, gen_salt('bf'))
+  set admin_pin_hash = extensions.crypt(pin, extensions.gen_salt('bf'))
   where owner_user_id = auth.uid();
   if not found then
     raise exception '가족이 없습니다' using errcode = 'P0002';
@@ -326,11 +326,11 @@ create or replace function public.verify_admin_pin(pin text)
 returns boolean
 language sql
 security definer
-set search_path = public
+set search_path = public, extensions
 stable
 as $$
   select coalesce(
-    (select admin_pin_hash = crypt(pin, admin_pin_hash)
+    (select admin_pin_hash = extensions.crypt(pin, admin_pin_hash)
      from public.families
      where owner_user_id = auth.uid() and admin_pin_hash is not null),
     false
@@ -346,7 +346,7 @@ create or replace function public.create_family(
 returns uuid
 language plpgsql
 security definer
-set search_path = public
+set search_path = public, extensions
 as $$
 declare
   fid uuid;
@@ -364,7 +364,7 @@ begin
   end if;
 
   insert into public.families (owner_user_id, name, admin_pin_hash)
-  values (auth.uid(), family_name, crypt(pin, gen_salt('bf')))
+  values (auth.uid(), family_name, extensions.crypt(pin, extensions.gen_salt('bf')))
   returning id into fid;
 
   for m in select * from jsonb_array_elements(members_json) loop
@@ -402,7 +402,7 @@ declare
   t text;
 begin
   foreach t in array array[
-    'members', 'plans', 'plan_weeks', 'goals', 'goal_changes', 'checkins',
+    'members', 'plans', 'plan_weeks', 'quests', 'goal_changes', 'checkins',
     'rewards', 'redemptions', 'weight_logs', 'cheers', 'sticker_bonuses'
   ] loop
     execute format('alter table public.%I enable row level security', t);
@@ -419,7 +419,7 @@ $$;
 -- -----------------------------------------------------------------------------
 
 alter table public.checkins replica identity full;
-alter table public.goals replica identity full;
+alter table public.quests replica identity full;
 alter table public.redemptions replica identity full;
 alter table public.weight_logs replica identity full;
 alter table public.cheers replica identity full;
@@ -428,7 +428,7 @@ do $$
 begin
   if exists (select 1 from pg_publication where pubname = 'supabase_realtime') then
     alter publication supabase_realtime add table
-      public.checkins, public.goals, public.redemptions, public.weight_logs, public.cheers,
+      public.checkins, public.quests, public.redemptions, public.weight_logs, public.cheers,
       public.rewards, public.members, public.plans, public.plan_weeks, public.sticker_bonuses;
   end if;
 end;

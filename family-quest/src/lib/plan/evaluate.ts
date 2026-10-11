@@ -132,13 +132,13 @@ export async function maintainPlans(repo: FamilyRepo, snap: FamilySnapshot, toda
     if (!curWeek) continue;
     const planGoals = snap.goals.filter((g) => g.plan_id === plan.id && g.active);
     const stale = planGoals.filter((g) => g.plan_stage !== curWeek.stage);
-    for (const g of stale) await repo.update("goals", g.id, { active: false });
+    for (const g of stale) await repo.update("quests", g.id, { active: false });
     if (!planGoals.some((g) => g.plan_stage === curWeek.stage)) {
       const age = member.birth_year_month ? ageFromYearMonth(member.birth_year_month, today).years : 30;
       const existingTitles = snap.goals.filter((g) => g.owner_member_id === plan.member_id && g.active && g.plan_id !== plan.id).map((g) => g.title);
       const drafts = draftStageGoals({ planId: plan.id, memberId: plan.member_id, stage: curWeek.stage, week: curWeek, minor: member.is_minor || !isAdultAge(age), existingTitles });
       if (drafts.length > 0) {
-        await repo.insertMany("goals", drafts);
+        await repo.insertMany("quests", drafts);
         notes.push(`${member.display_name}: ${STAGE_LABEL[curWeek.stage]} 단계 퀘스트 ${drafts.length}개를 만들었습니다.`);
       }
     }

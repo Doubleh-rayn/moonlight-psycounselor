@@ -28,7 +28,7 @@ export async function seedDemo(repo: MemoryRepo): Promise<void> {
 
   // 목표는 30일 전에 만든 것으로 두어 지난 체크가 달성률에 반영되게 한다
   const createdAt = new Date(Date.now() - 30 * 86_400_000).toISOString();
-  const goalRows: InsertInput<"goals">[] = [
+  const goalRows: InsertInput<"quests">[] = [
     { owner_member_id: mom.id, type: "diet", title: "가당 음료 1잔을 물로 바꾸기", days_of_week: [0, 1, 2, 3, 4, 5, 6], stickers: 1 },
     { owner_member_id: mom.id, type: "diet", title: "밥 3분의 1공기 덜기", days_of_week: [0, 1, 2, 3, 4, 5, 6], stickers: 1 },
     { owner_member_id: mom.id, type: "exercise", title: "빠르게 걷기 30분", measure: "minutes", target_value: 30, days_of_week: [], weekly_target: 3, stickers: 2 },
@@ -42,7 +42,7 @@ export async function seedDemo(repo: MemoryRepo): Promise<void> {
     { owner_member_id: hajun.id, type: "diet", title: "과자 대신 과일", days_of_week: [0, 1, 2, 3, 4, 5, 6], stickers: 1 },
     { owner_member_id: null, type: "exercise", title: "저녁 식사 후 함께 산책 20분", days_of_week: [0, 1, 2, 3, 4, 5, 6], stickers: 2 },
   ];
-  const goals = await repo.insertMany("goals", goalRows.map((g) => ({ ...g, created_at: createdAt })));
+  const goals = await repo.insertMany("quests", goalRows.map((g) => ({ ...g, created_at: createdAt })));
 
   // 지난 14일 체크 (오늘 제외): 구성원별 대략적인 달성률 차이를 둔다
   const rate: Record<string, number> = { [mom.id]: 0.65, [dad.id]: 0.8, [jiwoo.id]: 0.55, [hajun.id]: 0.85 };

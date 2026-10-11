@@ -133,7 +133,7 @@ export class SupabaseRepo implements FamilyRepo {
       await Promise.all([
         q(this.db.from("families").select("*").eq("id", fid).single()),
         q(this.db.from("members").select("*").order("sort_order")),
-        q(this.db.from("goals").select("*").order("created_at")),
+        q(this.db.from("quests").select("*").order("created_at")),
         q(this.db.from("checkins").select("*").gte("date", checkinsFrom).lte("date", today)),
         q(this.db.from("rewards").select("*").order("created_at")),
         q(this.db.from("redemptions").select("*").order("requested_at", { ascending: false })),

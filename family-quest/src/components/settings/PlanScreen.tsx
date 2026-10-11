@@ -85,7 +85,7 @@ export function PlanScreen() {
       // 이전 계획 종료 + 그 퀘스트 비활성화
       for (const p of snapshot.plans.filter((p) => p.member_id === member.id && p.status === "active")) {
         await repo.update("plans", p.id, { status: "done" });
-        for (const g of snapshot.goals.filter((g) => g.plan_id === p.id && g.active)) await repo.update("goals", g.id, { active: false });
+        for (const g of snapshot.goals.filter((g) => g.plan_id === p.id && g.active)) await repo.update("quests", g.id, { active: false });
       }
       const row = await repo.insert("plans", {
         member_id: member.id, start_weight: current, target_weight: target, weeks: plan.weeks, activity_level: form.activity, kind: plan.kind, start_date: today,
@@ -93,7 +93,7 @@ export function PlanScreen() {
       await repo.insertMany("plan_weeks", plan.stageWeeks.map((w) => ({ plan_id: row.id, ...w, daily_deficit: r1(w.daily_deficit), diet_kcal: r1(w.diet_kcal), exercise_kcal: r1(w.exercise_kcal), exercise_minutes_per_week: r1(w.exercise_minutes_per_week) })));
       const first = plan.stageWeeks[0];
       const existingTitles = snapshot.goals.filter((g) => g.owner_member_id === member.id && g.active && g.plan_id === null).map((g) => g.title);
-      await repo.insertMany("goals", draftStageGoals({ planId: row.id, memberId: member.id, stage: first.stage, week: first, minor: !adult, existingTitles }));
+      await repo.insertMany("quests", draftStageGoals({ planId: row.id, memberId: member.id, stage: first.stage, week: first, minor: !adult, existingTitles }));
       await repo.upsertWeightLog({ member_id: member.id, date: today, weight: current });
       await reload();
       toast(`${member.display_name}의 계획을 시작했습니다`);

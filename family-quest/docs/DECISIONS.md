@@ -95,9 +95,21 @@ PLAN.md 에 없거나 명확하지 않아 제가 정한 내용입니다. 각 항
 | H2 | 아이콘은 `public/icon.svg` 를 제가 그렸고 PNG(192/512/maskable/apple)는 그 SVG 로 생성 | 이모지·캐릭터 금지 규칙에 맞춘 단순 체크 아이콘 | SVG 교체 후 `e2e` 폴더의 방식으로 재생성 |
 | H3 | 배포는 Vercel 프로젝트의 Root Directory 를 `family-quest` 로 지정하는 방식 | A1 | – |
 
+## J. Supabase·Vercel 연결 (연결 작업 중 결정)
+
+| # | 결정 | 이유 | 바꾸는 방법 |
+|---|---|---|---|
+| J1 | Supabase 프로젝트(`vtchhevvqqizjzmxhqtw`)가 일시정지 상태라 복구(restore)했다 | 무료 플랜의 비활성 정지 | – |
+| J2 | 같은 프로젝트에 다른 앱(상담센터: centers, counselors, children, goals, daily_checks, session_records, tree_progress, praise_messages)의 테이블이 있어 **건드리지 않고**, 제 `goals` 테이블만 `quests` 로 이름을 바꿨다 (코드의 타입·스냅샷 이름은 `goals` 그대로) | 이름 충돌 회피, 타 앱 데이터 보존 | 다른 앱을 지우거나 별도 Supabase 프로젝트를 쓰면 원래 이름으로 되돌릴 수 있음 |
+| J3 | PIN 함수의 `crypt`/`gen_salt` 를 `extensions.` 스키마로 한정 | Supabase 는 pgcrypto 를 extensions 스키마에 설치 | – |
+| J4 | 클라이언트 키는 새 형식 `sb_publishable_…` 을 사용 (legacy anon JWT 대신) | Supabase 권장 | 대시보드 API Keys |
+| J5 | Vercel 에 **별도 프로젝트 `family-quest`** 를 만들고 Root Directory 를 `family-quest` 로 지정. 기존 `moonlight-psycounselor` 프로젝트(상담사 홈페이지)는 그대로 둠 | 한 저장소, 두 사이트 | – |
+| J6 | 새 Vercel 프로젝트의 Vercel Authentication(배포 보호)을 꺼서 가족이 로그인 없이 접속 가능하게 함 (앱 자체 로그인이 있음) | 휴대폰에서 바로 열어야 함 | Vercel → Settings → Deployment Protection |
+| J7 | Supabase Auth 의 "Confirm email" 설정은 MCP 로 바꿀 수 없어 그대로 둠. 가입 후 확인 메일의 링크를 눌러야 로그인된다 | 도구 한계 | 대시보드 Authentication → Providers → Email 에서 끄기 |
+
 ## I. 확인이 남은 것 (제가 할 수 없는 부분)
 
-1. **실제 Supabase 연결 검증**: URL·anon key 가 없어 Supabase 모드는 실행해 보지 못했습니다. SQL 은 로컬 PostgreSQL 에서 검증했고, 클라이언트 코드는 타입 검사만 통과한 상태입니다. 키를 넣은 뒤 로그인 → 가족 생성 → 체크 → 다른 기기 반영을 한 번 확인해야 합니다.
+1. **실제 Supabase 브라우저 흐름 검증**: 마이그레이션·RLS·키·환경변수는 적용했지만, 이 작업 환경의 브라우저는 Supabase 호스트에 접속할 수 없어 로그인 → 가족 생성 → 체크 → 다른 기기 반영은 배포된 주소에서 직접 확인해야 합니다.
 2. **휴대폰 홈 화면 설치**: 매니페스트·아이콘·서비스 워커가 제공되는 것까지 확인했고 실제 기기 설치는 배포 후 확인이 필요합니다.
 3. lavender 색 구성원의 그래프 선 색(6절에 없음): edge 색(#B9A4F0)으로 임시 사용 중.
 4. BMI 판정 경계를 "표시값(소수 1자리)" 기준으로 비교(명세 3.4 해석). 성장도표 데이터 이용 조건은 공개 배포 전 확인 필요.

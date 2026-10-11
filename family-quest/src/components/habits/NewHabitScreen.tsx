@@ -62,7 +62,7 @@ export function NewHabitScreen() {
         "습관 추가",
         (s) => s,
         (repo) =>
-          repo.insert("goals", {
+          repo.insert("quests", {
             owner_member_id: ownerId, type: cat.type, category: cat.category, title: t, measure, target_value: tv,
             days_of_week: repeat === "days" ? [...days].sort() : [], weekly_target: repeat === "weekly" ? wt : null,
             stickers, status, created_by_member_id: me.id,
