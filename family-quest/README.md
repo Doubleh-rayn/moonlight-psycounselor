@@ -22,6 +22,8 @@ src/components/today/   오늘 화면 전용 구성 요소
 src/lib/design/         디자인 토큰 매핑 (toneStyle)
 src/lib/date.ts         Asia/Seoul 기준 날짜 계산 (+ 테스트)
 src/lib/mock/           1단계 임시 데이터 (4단계에서 Supabase 로 교체)
+src/lib/bmi/            소아청소년 BMI 백분위수 판정 (LMS, 순수 함수 + 테스트)
+data/bmi_lms_2017.json  2017 소아청소년 성장도표 연령별 BMI LMS 표 (성별·월령 24~227)
 ```
 
 ## 진행
