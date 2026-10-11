@@ -22,7 +22,7 @@ type Draft = Pick<MemberRow, "display_name" | "role" | "is_minor" | "color" | "b
 
 /** 설정: 가족 이름, 구성원 관리, PIN 변경, 계획 만들기, 로그아웃 */
 export function SettingsScreen() {
-  const { snapshot, me, demo, signOut, setPin, repo, reload } = useReadyFamily();
+  const { snapshot, me, demo, signOut, setPin, repo, reload, changePassword, user } = useReadyFamily();
   const { run } = useActions();
   const requirePin = usePinGate();
   const toast = useToast();
@@ -32,6 +32,9 @@ export function SettingsScreen() {
   const [familyName, setFamilyName] = useState(snapshot.family.name);
   const [newPin, setNewPin] = useState("");
   const [newPin2, setNewPin2] = useState("");
+  const [pwOpen, setPwOpen] = useState(false);
+  const [newPw, setNewPw] = useState("");
+  const [newPw2, setNewPw2] = useState("");
 
   const members = [...snapshot.members].sort((a, b) => a.sort_order - b.sort_order);
 
@@ -72,6 +75,22 @@ export function SettingsScreen() {
       setPinOpen(false);
       setNewPin("");
       setNewPin2("");
+    } catch (e) {
+      toast(e instanceof Error ? e.message : "변경 실패", "error");
+    }
+  };
+
+  const savePassword = async () => {
+    if (newPw.length < 6) return toast("비밀번호는 6자 이상이어야 합니다", "error");
+    if (newPw !== newPw2) return toast("두 번 입력이 다릅니다", "error");
+    const ok = await requirePin("계정 비밀번호 변경에는 관리자 PIN 이 필요합니다");
+    if (!ok) return;
+    try {
+      await changePassword(newPw);
+      toast("비밀번호를 바꿨습니다");
+      setPwOpen(false);
+      setNewPw("");
+      setNewPw2("");
     } catch (e) {
       toast(e instanceof Error ? e.message : "변경 실패", "error");
     }
@@ -146,6 +165,14 @@ export function SettingsScreen() {
         <Button tone="panel" onClick={() => setPinOpen(true)}>변경</Button>
       </Card>
 
+      <Card className="flex items-center justify-between">
+        <div>
+          <p className="text-[15px] font-bold">가족 계정 비밀번호</p>
+          <p className="text-[12px] text-muted">{user?.email ?? ""}</p>
+        </div>
+        <Button tone="panel" onClick={() => setPwOpen(true)}>변경</Button>
+      </Card>
+
       <Button tone="surface" block onClick={() => void signOut()}>
         <LogOut size={16} strokeWidth={2.2} aria-hidden /> 로그아웃
       </Button>
@@ -184,6 +211,15 @@ export function SettingsScreen() {
           <Field label="새 PIN" hint="(숫자 4자리)"><TextInput inputMode="numeric" maxLength={4} value={newPin} onChange={(e) => setNewPin(e.target.value.replace(/\D/g, ""))} /></Field>
           <Field label="새 PIN 확인"><TextInput inputMode="numeric" maxLength={4} value={newPin2} onChange={(e) => setNewPin2(e.target.value.replace(/\D/g, ""))} /></Field>
           <Button tone="gold" size="lg" block onClick={() => void changePin()}>현재 PIN 확인 후 변경</Button>
+        </div>
+      </Sheet>
+
+      <Sheet open={pwOpen} title="가족 계정 비밀번호 변경" onClose={() => setPwOpen(false)}>
+        <div className="flex flex-col gap-3">
+          <p className="text-[12px] text-muted">모든 기기에서 같은 계정으로 로그인하므로, 바꾼 뒤 가족에게 알려 주세요.</p>
+          <Field label="새 비밀번호" hint="(6자 이상)"><TextInput type="password" autoComplete="new-password" minLength={6} value={newPw} onChange={(e) => setNewPw(e.target.value)} /></Field>
+          <Field label="새 비밀번호 확인"><TextInput type="password" autoComplete="new-password" minLength={6} value={newPw2} onChange={(e) => setNewPw2(e.target.value)} /></Field>
+          <Button tone="gold" size="lg" block onClick={() => void savePassword()}>관리자 PIN 확인 후 변경</Button>
         </div>
       </Sheet>
 

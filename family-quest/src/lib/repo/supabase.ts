@@ -72,6 +72,11 @@ export class SupabaseRepo implements FamilyRepo {
     this.familyId = null;
   }
 
+  async changePassword(newPassword: string): Promise<void> {
+    const { error } = await this.db.auth.updateUser({ password: newPassword });
+    if (error) throw toRepoError(error, "비밀번호를 바꾸지 못했습니다");
+  }
+
   onAuthChange(cb: (user: AuthUser | null) => void): () => void {
     const { data } = this.db.auth.onAuthStateChange((_event, session) => {
       const u = session?.user;

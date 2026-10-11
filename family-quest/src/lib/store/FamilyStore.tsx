@@ -44,6 +44,7 @@ export interface FamilyStore {
   signIn(email: string, password: string): Promise<void>;
   signUp(email: string, password: string): Promise<{ needsEmailConfirm: boolean }>;
   signOut(): Promise<void>;
+  changePassword(newPassword: string): Promise<void>;
   createFamily(input: { name: string; pin: string; members: NewMemberInput[] }): Promise<void>;
   selectMember(id: string | null): void;
   reload(): Promise<void>;
@@ -249,6 +250,10 @@ export function FamilyStoreProvider({ children }: { children: ReactNode }) {
         if (!repo) return;
         writeMemberId(null);
         await repo.signOut();
+      },
+      async changePassword(newPassword) {
+        if (!repo) throw new RepoError("준비 중입니다");
+        await repo.changePassword(newPassword);
       },
       async createFamily(input) {
         if (!repo) throw new RepoError("준비 중입니다");

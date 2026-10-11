@@ -82,6 +82,8 @@ export interface FamilyRepo {
   signIn(email: string, password: string): Promise<void>;
   signUp(email: string, password: string): Promise<{ needsEmailConfirm: boolean }>;
   signOut(): Promise<void>;
+  /** 로그인한 계정의 비밀번호 변경 */
+  changePassword(newPassword: string): Promise<void>;
   onAuthChange(cb: (user: AuthUser | null) => void): () => void;
 
   // ---- 가족 ----

@@ -195,6 +195,14 @@ export class MemoryRepo implements FamilyRepo {
     this.notifyAuth();
   }
 
+  async changePassword(newPassword: string): Promise<void> {
+    const u = this.user;
+    if (!u) throw new RepoError("로그인이 필요합니다", "auth");
+    if (newPassword.length < 6) throw new RepoError("비밀번호는 6자 이상이어야 합니다", "auth");
+    u.password = newPassword;
+    this.save();
+  }
+
   onAuthChange(cb: (user: AuthUser | null) => void): () => void {
     this.authListeners.add(cb);
     return () => this.authListeners.delete(cb);
