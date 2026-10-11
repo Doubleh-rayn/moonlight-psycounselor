@@ -54,3 +54,80 @@ export function formatKoreanDate(now: Date = new Date()): string {
   const { month, day, weekday } = seoulDateParts(now);
   return `${month}월 ${day}일 ${WEEKDAY_KO[weekday]}요일`;
 }
+
+// ---------------------------------------------------------------------------
+// 'YYYY-MM-DD' 문자열 연산 (시간대 영향 없음)
+// ---------------------------------------------------------------------------
+
+export function parseKey(key: string): { year: number; month: number; day: number } {
+  const [y, m, d] = key.split("-").map(Number);
+  return { year: y, month: m, day: d };
+}
+
+export function toKey(year: number, month: number, day: number): string {
+  return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+}
+
+/** 날짜 키에 일수를 더한다 (UTC 로 계산해 DST·시간대 영향을 없앤다) */
+export function addDays(key: string, days: number): string {
+  const { year, month, day } = parseKey(key);
+  const t = Date.UTC(year, month - 1, day + days);
+  const d = new Date(t);
+  return toKey(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
+}
+
+/** 요일 0(일)~6(토) */
+export function weekdayOf(key: string): number {
+  const { year, month, day } = parseKey(key);
+  return new Date(Date.UTC(year, month - 1, day)).getUTCDay();
+}
+
+/** 주의 시작: 월요일 (한국 관행). 일요일은 그 주의 마지막 날 */
+export function startOfWeek(key: string): string {
+  const wd = weekdayOf(key);
+  const back = wd === 0 ? 6 : wd - 1;
+  return addDays(key, -back);
+}
+
+export function endOfWeek(key: string): string {
+  return addDays(startOfWeek(key), 6);
+}
+
+/** 두 날짜 키의 차이 (b − a, 일) */
+export function diffDays(a: string, b: string): number {
+  const pa = parseKey(a);
+  const pb = parseKey(b);
+  return Math.round((Date.UTC(pb.year, pb.month - 1, pb.day) - Date.UTC(pa.year, pa.month - 1, pa.day)) / 86_400_000);
+}
+
+/** from~to 사이의 날짜 키 목록 (양 끝 포함) */
+export function eachDay(from: string, to: string): string[] {
+  const out: string[] = [];
+  for (let k = from; k <= to; k = addDays(k, 1)) out.push(k);
+  return out;
+}
+
+export function startOfMonth(key: string): string {
+  const { year, month } = parseKey(key);
+  return toKey(year, month, 1);
+}
+
+export function endOfMonth(key: string): string {
+  const { year, month } = parseKey(key);
+  const last = new Date(Date.UTC(year, month, 0)).getUTCDate();
+  return toKey(year, month, last);
+}
+
+export function addMonths(key: string, months: number): string {
+  const { year, month } = parseKey(key);
+  const d = new Date(Date.UTC(year, month - 1 + months, 1));
+  return toKey(d.getUTCFullYear(), d.getUTCMonth() + 1, 1);
+}
+
+/** "10월 11일 (토)" */
+export function formatShortDate(key: string): string {
+  const { month, day } = parseKey(key);
+  return `${month}월 ${day}일 (${WEEKDAY_KO[weekdayOf(key)]})`;
+}
+
+export const WEEKDAY_LABELS = WEEKDAY_KO;

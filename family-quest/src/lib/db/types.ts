@@ -19,7 +19,7 @@ export type PlanStatus = "active" | "done";
 export type PlanKind = "loss" | "maintain";
 export type ActivityLevel = "light" | "moderate" | "active";
 
-export interface FamilyRow {
+export type FamilyRow = {
   id: string;
   owner_user_id: string;
   name: string;
@@ -27,7 +27,7 @@ export interface FamilyRow {
   created_at: string;
 }
 
-export interface MemberRow {
+export type MemberRow = {
   id: string;
   family_id: string;
   display_name: string;
@@ -42,7 +42,7 @@ export interface MemberRow {
   created_at: string;
 }
 
-export interface PlanRow {
+export type PlanRow = {
   id: string;
   family_id: string;
   member_id: string;
@@ -56,7 +56,7 @@ export interface PlanRow {
   created_at: string;
 }
 
-export interface PlanWeekRow {
+export type PlanWeekRow = {
   id: string;
   family_id: string;
   plan_id: string;
@@ -71,7 +71,7 @@ export interface PlanWeekRow {
   extended: boolean;
 }
 
-export interface GoalRow {
+export type GoalRow = {
   id: string;
   family_id: string;
   owner_member_id: string | null; // null = 가족 공동
@@ -92,7 +92,7 @@ export interface GoalRow {
   created_at: string;
 }
 
-export interface GoalChangeRow {
+export type GoalChangeRow = {
   id: string;
   family_id: string;
   goal_id: string;
@@ -102,7 +102,7 @@ export interface GoalChangeRow {
   changed_at: string;
 }
 
-export interface CheckinRow {
+export type CheckinRow = {
   id: string;
   family_id: string;
   goal_id: string;
@@ -114,7 +114,7 @@ export interface CheckinRow {
   updated_at: string;
 }
 
-export interface RewardRow {
+export type RewardRow = {
   id: string;
   family_id: string;
   title: string;
@@ -126,7 +126,7 @@ export interface RewardRow {
   created_at: string;
 }
 
-export interface RedemptionRow {
+export type RedemptionRow = {
   id: string;
   family_id: string;
   reward_id: string;
@@ -137,7 +137,7 @@ export interface RedemptionRow {
   fulfilled_at: string | null;
 }
 
-export interface WeightLogRow {
+export type WeightLogRow = {
   id: string;
   family_id: string;
   member_id: string;
@@ -146,7 +146,7 @@ export interface WeightLogRow {
   created_at: string;
 }
 
-export interface CheerRow {
+export type CheerRow = {
   id: string;
   family_id: string;
   from_member_id: string;
@@ -156,7 +156,7 @@ export interface CheerRow {
   created_at: string;
 }
 
-export interface StickerBonusRow {
+export type StickerBonusRow = {
   id: string;
   family_id: string;
   member_id: string;
@@ -166,7 +166,7 @@ export interface StickerBonusRow {
   created_at: string;
 }
 
-export interface MemberStickerBalanceRow {
+export type MemberStickerBalanceRow = {
   family_id: string;
   member_id: string;
   earned: number;
@@ -175,7 +175,7 @@ export interface MemberStickerBalanceRow {
   balance: number;
 }
 
-export interface FamilyStickerBalanceRow {
+export type FamilyStickerBalanceRow = {
   family_id: string;
   earned: number;
   spent: number;
