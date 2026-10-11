@@ -1,5 +1,15 @@
-import { Placeholder } from "@/components/layout/Placeholder";
+"use client";
 
-export default function Page() {
-  return <Placeholder title="기록" stage={5} />;
+import { Suspense } from "react";
+import { AppShell } from "@/components/layout/AppShell";
+import { RecordsScreen } from "@/components/records/RecordsScreen";
+
+export default function RecordsPage() {
+  return (
+    <AppShell>
+      <Suspense fallback={null}>
+        <RecordsScreen />
+      </Suspense>
+    </AppShell>
+  );
 }
