@@ -1,5 +1,12 @@
-import { Placeholder } from "@/components/layout/Placeholder";
+"use client";
 
-export default function Page() {
-  return <Placeholder title="보상" stage={6} />;
+import { AppShell } from "@/components/layout/AppShell";
+import { RewardsScreen } from "@/components/rewards/RewardsScreen";
+
+export default function RewardsPage() {
+  return (
+    <AppShell>
+      <RewardsScreen />
+    </AppShell>
+  );
 }
