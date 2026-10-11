@@ -5,7 +5,7 @@ import type { CheckinRow, GoalRow, MemberRow, RedemptionRow, RewardRow, StickerB
 const F = "fam";
 const member = (id: string, active = true): MemberRow => ({
   id, family_id: F, display_name: id, role: "member", is_minor: false, color: "blue",
-  birth_year_month: null, sex: null, height_cm: null, sort_order: 0, active, created_at: "",
+  birth_year_month: null, sex: null, height_cm: null, sort_order: 0, active, user_id: null, created_at: "",
 });
 const goal = (id: string, owner: string | null, stickers: number): GoalRow => ({
   id, family_id: F, owner_member_id: owner, type: "exercise", category: null, title: id, measure: "done",

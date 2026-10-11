@@ -8,6 +8,7 @@ import { useFamily } from "@/lib/store/FamilyStore";
 import { useToast } from "@/components/app/Toast";
 import { DEMO_EMAIL, DEMO_PASSWORD, seedDemo } from "@/lib/repo/demoSeed";
 import type { MemoryRepo } from "@/lib/repo/memory";
+import { toLoginEmail } from "@/lib/auth/ids";
 
 export default function LoginPage() {
   const { signIn, signUp, demo, repo } = useFamily();
@@ -23,9 +24,9 @@ export default function LoginPage() {
     setBusy(true);
     setError(null);
     try {
-      if (mode === "in") await signIn(email, password);
+      if (mode === "in") await signIn(toLoginEmail(email), password);
       else {
-        const r = await signUp(email, password);
+        const r = await signUp(toLoginEmail(email), password);
         if (r.needsEmailConfirm) toast("확인 메일을 보냈습니다. 메일의 링크를 누른 뒤 로그인해 주세요.");
       }
     } catch (err) {
@@ -49,12 +50,12 @@ export default function LoginPage() {
   return (
     <main className="mx-auto flex w-full max-w-[480px] flex-1 flex-col justify-center px-4 py-8">
       <h1 className="text-[28px] font-extrabold">가족 퀘스트</h1>
-      <p className="mt-1 text-[14px] font-medium text-muted">가족 계정 하나로 모든 기기에서 로그인합니다</p>
+      <p className="mt-1 text-[14px] font-medium text-muted">자기 아이디로 로그인하면 바로 내 화면이 열립니다</p>
 
       <Card className="mt-5">
         <form onSubmit={submit} className="flex flex-col gap-3">
-          <Field label="이메일">
-            <TextInput type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+          <Field label="아이디" hint={mode === "up" ? "(또는 이메일)" : undefined}>
+            <TextInput type="text" autoComplete="username" autoCapitalize="none" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="예: hhu2000" />
           </Field>
           <Field label="비밀번호" hint={mode === "up" ? "(6자 이상)" : undefined}>
             <TextInput

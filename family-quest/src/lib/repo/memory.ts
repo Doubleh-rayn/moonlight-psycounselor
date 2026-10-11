@@ -63,7 +63,7 @@ function uuid(): string {
 
 /** DB 의 default 값과 같은 기본값 */
 const DEFAULTS: { [T in TableName]?: Partial<Row<T>> } = {
-  members: { is_minor: false, birth_year_month: null, sex: null, height_cm: null, sort_order: 0, active: true },
+  members: { is_minor: false, birth_year_month: null, sex: null, height_cm: null, sort_order: 0, active: true, user_id: null },
   plans: { activity_level: "light", kind: "loss", status: "active" },
   plan_weeks: { daily_deficit: 0, diet_kcal: 0, exercise_kcal: 0, exercise_minutes_per_week: 0, passed: null, extended: false },
   quests: {
@@ -231,7 +231,7 @@ export class MemoryRepo implements FamilyRepo {
     this.state.tables.families.push(family);
     this.state.pins[family.id] = input.pin;
     input.members.forEach((m, i) => {
-      this.state.tables.members.push({ id: uuid(), family_id: family.id, ...m, sort_order: i, active: true, created_at: now });
+      this.state.tables.members.push({ id: uuid(), family_id: family.id, ...m, sort_order: i, active: true, user_id: null, created_at: now });
     });
     this.save();
     this.emit("members");

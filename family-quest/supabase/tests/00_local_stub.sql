@@ -31,3 +31,6 @@ grant usage on schema public to authenticated, anon;
 alter default privileges in schema public grant all on tables to authenticated;
 alter default privileges in schema public grant all on sequences to authenticated;
 alter default privileges in schema public grant execute on functions to authenticated;
+-- Supabase 처럼 anon/authenticated 가 auth.uid() 를 직접 호출할 수 있게
+grant usage on schema auth to authenticated, anon;
+grant execute on function auth.uid() to authenticated, anon;

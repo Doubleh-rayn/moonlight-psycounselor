@@ -13,6 +13,7 @@ import { usePinGate } from "@/components/app/PinGate";
 import { useToast } from "@/components/app/Toast";
 import { toneStyle } from "@/lib/design/tokens";
 import type { MemberColor, MemberRow } from "@/lib/db/types";
+import { displayLoginId } from "@/lib/auth/ids";
 
 const COLORS: { value: MemberColor; label: string }[] = [
   { value: "blue", label: "파랑" }, { value: "peach", label: "살구" }, { value: "mint", label: "민트" }, { value: "lavender", label: "라벤더" }, { value: "pink", label: "분홍" },
@@ -167,8 +168,8 @@ export function SettingsScreen() {
 
       <Card className="flex items-center justify-between">
         <div>
-          <p className="text-[15px] font-bold">가족 계정 비밀번호</p>
-          <p className="text-[12px] text-muted">{user?.email ?? ""}</p>
+          <p className="text-[15px] font-bold">내 계정 비밀번호</p>
+          <p className="text-[12px] text-muted">아이디 {displayLoginId(user?.email)}</p>
         </div>
         <Button tone="panel" onClick={() => setPwOpen(true)}>변경</Button>
       </Card>
@@ -216,7 +217,7 @@ export function SettingsScreen() {
 
       <Sheet open={pwOpen} title="가족 계정 비밀번호 변경" onClose={() => setPwOpen(false)}>
         <div className="flex flex-col gap-3">
-          <p className="text-[12px] text-muted">모든 기기에서 같은 계정으로 로그인하므로, 바꾼 뒤 가족에게 알려 주세요.</p>
+          <p className="text-[12px] text-muted">이 아이디로 로그인하는 모든 기기에 적용됩니다.</p>
           <Field label="새 비밀번호" hint="(6자 이상)"><TextInput type="password" autoComplete="new-password" minLength={6} value={newPw} onChange={(e) => setNewPw(e.target.value)} /></Field>
           <Field label="새 비밀번호 확인"><TextInput type="password" autoComplete="new-password" minLength={6} value={newPw2} onChange={(e) => setNewPw2(e.target.value)} /></Field>
           <Button tone="gold" size="lg" block onClick={() => void savePassword()}>관리자 PIN 확인 후 변경</Button>

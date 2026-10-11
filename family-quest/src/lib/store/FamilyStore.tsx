@@ -35,9 +35,11 @@ export interface FamilyStore {
   familyStatus: FamilyStatus;
   snapshot: FamilySnapshot | null;
   error: string | null;
-  /** 이 기기에서 선택한 구성원 */
+  /** 이 기기에서 선택한 구성원 (계정에 묶인 구성원이 있으면 그 구성원) */
   me: MemberRow | null;
   meId: string | null;
+  /** 로그인 계정이 특정 구성원에 묶여 있어 프로필 선택이 필요 없는가 */
+  lockedToMember: boolean;
   online: boolean;
   today: string;
 
@@ -219,10 +221,16 @@ export function FamilyStoreProvider({ children }: { children: ReactNode }) {
     return off;
   }, [repo, familyStatus, scheduleReload]);
 
+  // 로그인 계정에 묶인 구성원이 있으면 그 구성원으로 고정, 없으면 이 기기에서 고른 구성원
+  const linked = useMemo(
+    () => (snapshot && user ? snapshot.members.find((m) => m.user_id === user.id && m.active) ?? null : null),
+    [snapshot, user],
+  );
   const me = useMemo(() => {
+    if (linked) return linked;
     if (!snapshot || !meId) return null;
     return snapshot.members.find((m) => m.id === meId && m.active) ?? null;
-  }, [snapshot, meId]);
+  }, [snapshot, meId, linked]);
 
   const store: FamilyStore = useMemo(
     () => ({
@@ -234,6 +242,7 @@ export function FamilyStoreProvider({ children }: { children: ReactNode }) {
       error,
       me,
       meId,
+      lockedToMember: linked !== null,
       online,
       today,
       repo,
@@ -295,7 +304,7 @@ export function FamilyStoreProvider({ children }: { children: ReactNode }) {
         }
       },
     }),
-    [authStatus, user, familyStatus, snapshot, error, me, meId, online, today, repo, loadFamily, scheduleReload, setSnapshot],
+    [authStatus, user, familyStatus, snapshot, error, me, meId, linked, online, today, repo, loadFamily, scheduleReload, setSnapshot],
   );
 
   return <Ctx.Provider value={store}>{children}</Ctx.Provider>;

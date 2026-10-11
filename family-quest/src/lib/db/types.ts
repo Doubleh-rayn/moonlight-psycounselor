@@ -39,6 +39,8 @@ export type MemberRow = {
   height_cm: number | null;
   sort_order: number;
   active: boolean;
+  /** 이 구성원으로 자동 선택되는 로그인 계정 (없으면 프로필 선택) */
+  user_id: string | null;
   created_at: string;
 }
 
@@ -201,7 +203,7 @@ export type Database = {
       families: Table<FamilyRow, "admin_pin_hash">;
       members: Table<
         MemberRow,
-        "is_minor" | "birth_year_month" | "sex" | "height_cm" | "sort_order" | "active"
+        "is_minor" | "birth_year_month" | "sex" | "height_cm" | "sort_order" | "active" | "user_id"
       >;
       plans: Table<PlanRow, "activity_level" | "kind" | "start_date" | "status">;
       plan_weeks: Table<

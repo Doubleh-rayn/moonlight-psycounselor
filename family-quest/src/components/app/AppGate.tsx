@@ -23,7 +23,7 @@ function Splash({ text }: { text: string }) {
 }
 
 export function AppGate({ children }: { children: ReactNode }) {
-  const { authStatus, familyStatus, me, meId, snapshot, error, reload, signOut } = useFamily();
+  const { authStatus, familyStatus, me, meId, snapshot, error, reload, signOut, lockedToMember } = useFamily();
   const pathname = usePathname();
   const router = useRouter();
 
@@ -39,6 +39,7 @@ export function AppGate({ children }: { children: ReactNode }) {
     else if (familyStatus === "ready") {
       if (isPublic || isSetup) target = me ? "/" : "/profiles";
       else if (!me && !isProfiles) target = "/profiles";
+      else if (isProfiles && lockedToMember) target = "/";
     }
   }
 

@@ -177,5 +177,31 @@ begin
 end;
 $$;
 
+-- ---------- 계정 C 를 A 의 가족에 연결하면(구성원 로그인) A 의 데이터가 보인다 ----------
+reset role;
+insert into auth.users (id, email) values ('33333333-3333-3333-3333-333333333333', 'c@example.com');
+insert into public.family_users (user_id, family_id) values ('33333333-3333-3333-3333-333333333333', (select family_a from ctx));
+update public.members set user_id = '33333333-3333-3333-3333-333333333333'
+  where family_id = (select family_a from ctx) and display_name = '아이';
+set role authenticated;
+select set_config('request.jwt.claims', '{"sub":"33333333-3333-3333-3333-333333333333","role":"authenticated"}', false);
+do $$
+declare
+  n integer;
+begin
+  if public.my_family_id() <> (select family_a from ctx) then raise exception 'C 의 가족이 A 가 아니다'; end if;
+  select count(*) into n from public.members; if n <> 2 then raise exception 'C 가 A 의 구성원 % 명을 본다', n; end if;
+  select count(*) into n from public.members where user_id = auth.uid(); if n <> 1 then raise exception 'C 에 연결된 구성원이 없다'; end if;
+  if not public.verify_admin_pin('9876') then raise exception 'C 가 가족 PIN 을 확인하지 못한다'; end if;
+  select count(*) into n from public.family_users; if n <> 1 then raise exception 'C 가 family_users % 행을 본다', n; end if;
+  begin
+    perform public.create_family('C네', '1111', '[{"display_name":"x","role":"admin","color":"blue"},{"display_name":"y","color":"blue"}]'::jsonb);
+    raise exception '이미 가족이 있는 계정의 가족 생성이 허용되었다';
+  exception when unique_violation then
+    raise notice 'OK 구성원 계정은 가족 데이터 접근 가능, 중복 가족 생성 불가';
+  end;
+end;
+$$;
+
 reset role;
 select 'ALL RLS TESTS PASSED' as result;
