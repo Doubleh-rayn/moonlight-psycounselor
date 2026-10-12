@@ -44,7 +44,12 @@ export function QuestMapScreen() {
 
   return (
     <div className="flex flex-col gap-4 px-4 pt-5">
-      <h1 className="text-[28px] font-extrabold">퀘스트 지도</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-[28px] font-extrabold">퀘스트 지도</h1>
+        {me.role === "admin" && (
+          <Link href="/quests/manage" className="text-[13px] font-bold text-blue-deep">퀘스트 관리</Link>
+        )}
+      </div>
       <ChipGroup ariaLabel="구성원" options={members.map((m) => ({ value: m.id, label: m.id === me.id ? `나 (${m.display_name})` : m.display_name }))} value={memberId} onChange={setMemberId} />
 
       {!plan && (

@@ -29,12 +29,15 @@ function catKeyOf(goal: Pick<GoalRow, "type" | "category">): string {
  */
 export function HabitForm({
   initial,
+  defaultOwner,
   submitLabel,
   busy,
   onSubmit,
   footer,
 }: {
   initial?: GoalRow;
+  /** 새로 만들 때 미리 고를 대상: 구성원 id 또는 "family" */
+  defaultOwner?: string;
   submitLabel: string;
   busy: boolean;
   onSubmit: (values: HabitValues) => Promise<void>;
@@ -49,7 +52,7 @@ export function HabitForm({
   const [title, setTitle] = useState(initial?.title ?? "");
   const [measure, setMeasure] = useState<Measure>(initial?.measure ?? "done");
   const [target, setTarget] = useState(initial ? String(initial.target_value) : "1");
-  const [owner, setOwner] = useState<string>(initial ? (initial.owner_member_id ?? FAMILY) : me.id);
+  const [owner, setOwner] = useState<string>(initial ? (initial.owner_member_id ?? FAMILY) : (defaultOwner ?? me.id));
   const [repeat, setRepeat] = useState<"days" | "weekly">(initial && initial.days_of_week.length === 0 ? "weekly" : "days");
   const [days, setDays] = useState<number[]>(initial && initial.days_of_week.length > 0 ? initial.days_of_week : [0, 1, 2, 3, 4, 5, 6]);
   const [weekly, setWeekly] = useState(initial?.weekly_target ? String(initial.weekly_target) : "3");
@@ -58,11 +61,10 @@ export function HabitForm({
   const cat = HABIT_CATEGORIES.find((c) => c.key === catKey)!;
   const ownerId = owner === FAMILY ? null : owner;
   const isAdmin = me.role === "admin";
-  // 구성원은 자기 것 또는 가족 공동 대상 선택 가능하되, 가족 공동은 관리자만 (권한 규칙과 동일)
-  const ownerOptions = [
-    ...members.map((m) => ({ value: m.id, label: m.id === me.id ? `본인 (${m.display_name})` : m.display_name })),
-    ...(isAdmin ? [{ value: FAMILY, label: "가족 공동" }] : []),
-  ];
+  // 대상: 관리자는 모든 구성원 + 가족 공동, 구성원은 본인만 (수정 권한 규칙과 동일)
+  const ownerOptions = isAdmin
+    ? [...members.map((m) => ({ value: m.id, label: m.id === me.id ? `본인 (${m.display_name})` : m.display_name })), { value: FAMILY, label: "가족 공동" }]
+    : [{ value: me.id, label: `본인 (${me.display_name})` }];
 
   const pick = (s: { title: string; measure: Measure; target: number }) => {
     setTitle(s.title);

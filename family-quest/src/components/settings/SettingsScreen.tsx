@@ -121,6 +121,18 @@ export function SettingsScreen() {
       </Card>
 
       {me.role === "admin" && (
+        <Link href="/quests/manage" className="block">
+          <Card tone="lavender" className="flex items-center justify-between">
+            <div>
+              <p className="text-[16px] font-bold">구성원 퀘스트 관리</p>
+              <p className="text-[12px] opacity-80">가족원별 퀘스트를 직접 추가·수정·승인</p>
+            </div>
+            <ChevronRight size={22} strokeWidth={2.2} aria-hidden />
+          </Card>
+        </Link>
+      )}
+
+      {me.role === "admin" && (
         <Link href="/settings/plan" className="block">
           <Card tone="gold" className="flex items-center justify-between">
             <div>
