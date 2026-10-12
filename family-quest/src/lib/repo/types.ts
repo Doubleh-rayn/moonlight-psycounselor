@@ -1,4 +1,5 @@
 import type {
+  PushSubscriptionRow,
   CheckinRow,
   CheerRow,
   Database,
@@ -84,6 +85,8 @@ export interface FamilyRepo {
   signOut(): Promise<void>;
   /** 로그인한 계정의 비밀번호 변경 */
   changePassword(newPassword: string): Promise<void>;
+  /** 서버 API(/api/push/test) 호출용 토큰. 데모 모드는 null */
+  getAccessToken(): Promise<string | null>;
   onAuthChange(cb: (user: AuthUser | null) => void): () => void;
 
   // ---- 가족 ----
@@ -121,6 +124,17 @@ export interface FamilyRepo {
 
   // ---- 실시간 ----
   subscribe(cb: (table: RealtimeTable) => void): () => void;
+
+  // 푸시 알림 (기기 1대 = 구독 1건). 데모 모드는 지원하지 않는다
+  getPushSubscription(endpoint: string): Promise<PushSubscriptionRow | null>;
+  savePushSubscription(input: {
+    member_id: string;
+    endpoint: string;
+    p256dh: string;
+    auth: string;
+    user_agent: string | null;
+  }): Promise<PushSubscriptionRow>;
+  deletePushSubscription(endpoint: string): Promise<void>;
 }
 
 export type { FamilyRow, MemberRow, GoalRow, CheckinRow, RewardRow, RedemptionRow, PlanRow, PlanWeekRow, WeightLogRow, CheerRow, StickerBonusRow };

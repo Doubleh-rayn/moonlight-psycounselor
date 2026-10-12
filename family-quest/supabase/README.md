@@ -48,3 +48,10 @@ Supabase 의 `auth` 스키마를 흉내 낸 스텁(`tests/00_local_stub.sql`)을
 
 다른 이메일로 계정을 하나 더 만들어 로그인하면 `members`, `goals` 등 어떤 테이블도 0건으로 조회된다.
 대시보드 → Table Editor 에서 "Impersonate" 로 두 사용자를 바꿔 가며 확인할 수 있다.
+
+## 푸시 알림 (0004)
+
+1. `0004_push.sql` 적용 (구독 테이블, `private.push_config`, 발송 함수).
+2. `private.push_config` 에 `('secret', <PUSH_SECRET>)` 를 넣는다. Vercel 의 `PUSH_SECRET` 과 같은 값.
+3. `supabase/cron/push_schedule.sql` 로 pg_cron·pg_net 을 켜고 아침·저녁 일정을 만든다 (url 을 배포 주소로).
+4. 수동 발송 테스트: `select net.http_post(...)` 를 그대로 실행하고 `select * from net._http_response order by id desc limit 1` 로 응답을 본다.

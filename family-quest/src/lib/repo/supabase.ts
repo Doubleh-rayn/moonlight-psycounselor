@@ -4,7 +4,7 @@
  */
 import type { RealtimeChannel } from "@supabase/supabase-js";
 import { getSupabase, type Db } from "@/lib/db/client";
-import type { CheckinRow, FamilyRow, RealtimeTable, StickerBonusRow, WeightLogRow } from "@/lib/db/types";
+import type { CheckinRow, FamilyRow, PushSubscriptionRow, RealtimeTable, StickerBonusRow, WeightLogRow } from "@/lib/db/types";
 import { REALTIME_TABLES } from "@/lib/db/types";
 import { todayKey } from "@/lib/date";
 import {
@@ -75,6 +75,11 @@ export class SupabaseRepo implements FamilyRepo {
   async changePassword(newPassword: string): Promise<void> {
     const { error } = await this.db.auth.updateUser({ password: newPassword });
     if (error) throw toRepoError(error, "비밀번호를 바꾸지 못했습니다");
+  }
+
+  async getAccessToken(): Promise<string | null> {
+    const { data } = await this.db.auth.getSession();
+    return data.session?.access_token ?? null;
   }
 
   onAuthChange(cb: (user: AuthUser | null) => void): () => void {
@@ -225,6 +230,37 @@ export class SupabaseRepo implements FamilyRepo {
       .maybeSingle();
     if (error) throw toRepoError(error);
     return (data as StickerBonusRow | null) ?? null;
+  }
+
+  // ---------------------------------------------------------------- 푸시 알림
+
+  async getPushSubscription(endpoint: string): Promise<PushSubscriptionRow | null> {
+    const { data, error } = await this.db.from("push_subscriptions").select("*").eq("endpoint", endpoint).maybeSingle();
+    if (error) throw toRepoError(error);
+    return (data as PushSubscriptionRow | null) ?? null;
+  }
+
+  async savePushSubscription(input: {
+    member_id: string;
+    endpoint: string;
+    p256dh: string;
+    auth: string;
+    user_agent: string | null;
+  }): Promise<PushSubscriptionRow> {
+    const { data, error } = await this.db.rpc("save_push_subscription", {
+      p_member_id: input.member_id,
+      p_endpoint: input.endpoint,
+      p_p256dh: input.p256dh,
+      p_auth: input.auth,
+      p_user_agent: input.user_agent,
+    });
+    if (error) throw toRepoError(error, "알림을 등록하지 못했습니다");
+    return data as PushSubscriptionRow;
+  }
+
+  async deletePushSubscription(endpoint: string): Promise<void> {
+    const { error } = await this.db.rpc("delete_push_subscription", { p_endpoint: endpoint });
+    if (error) throw toRepoError(error, "알림을 해제하지 못했습니다");
   }
 
   // ---------------------------------------------------------------- 실시간

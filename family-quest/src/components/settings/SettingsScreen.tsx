@@ -14,6 +14,7 @@ import { useToast } from "@/components/app/Toast";
 import { toneStyle } from "@/lib/design/tokens";
 import type { MemberColor, MemberRow } from "@/lib/db/types";
 import { displayLoginId } from "@/lib/auth/ids";
+import { PushSection } from "./PushSection";
 
 const COLORS: { value: MemberColor; label: string }[] = [
   { value: "blue", label: "파랑" }, { value: "peach", label: "살구" }, { value: "mint", label: "민트" }, { value: "lavender", label: "라벤더" }, { value: "pink", label: "분홍" },
@@ -157,6 +158,8 @@ export function SettingsScreen() {
           ))}
         </ul>
       </Card>
+
+      <PushSection />
 
       <Card className="flex items-center justify-between">
         <div className="flex items-center gap-2">

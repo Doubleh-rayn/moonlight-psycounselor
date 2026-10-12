@@ -10,4 +10,4 @@ run "dropdb --if-exists $DB"
 run "createdb $DB"
 run "$PSQL -d $DB -f supabase/tests/00_local_stub.sql"
 for f in supabase/migrations/*.sql; do run "$PSQL -d $DB -f $f"; done
-run "$PSQL -d $DB -f supabase/tests/10_rls_test.sql"
+for f in supabase/tests/[1-9]*.sql; do run "$PSQL -d $DB -f $f"; done

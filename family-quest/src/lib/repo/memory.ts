@@ -4,7 +4,7 @@
  * Supabase Realtime 과 비슷하게 화면을 갱신한다. 서버 없이 전체 흐름을 확인하는 용도이며
  * 실제 가족 데이터 저장에는 쓰지 않는다.
  */
-import type { FamilyRow, RealtimeTable } from "@/lib/db/types";
+import type { FamilyRow, PushSubscriptionRow, RealtimeTable } from "@/lib/db/types";
 import { REALTIME_TABLES } from "@/lib/db/types";
 import { todayKey } from "@/lib/date";
 import { computeFamilyBalance, computeMemberBalances } from "@/lib/stats/stickers";
@@ -50,6 +50,7 @@ function emptyTables(): Tables {
     weight_logs: [],
     cheers: [],
     sticker_bonuses: [],
+    push_subscriptions: [],
   };
 }
 
@@ -202,6 +203,21 @@ export class MemoryRepo implements FamilyRepo {
     u.password = newPassword;
     this.save();
   }
+
+  async getAccessToken(): Promise<string | null> {
+    return null;
+  }
+
+  // 데모 모드: 발송 서버가 없으므로 푸시는 지원하지 않는다
+  async getPushSubscription(): Promise<PushSubscriptionRow | null> {
+    return null;
+  }
+
+  async savePushSubscription(): Promise<PushSubscriptionRow> {
+    throw new RepoError("데모 모드에서는 알림을 쓸 수 없습니다", "unknown");
+  }
+
+  async deletePushSubscription(): Promise<void> {}
 
   onAuthChange(cb: (user: AuthUser | null) => void): () => void {
     this.authListeners.add(cb);

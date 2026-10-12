@@ -197,6 +197,33 @@ type Table<Row, Optional extends keyof Row = never> = {
 
 type View<Row> = { Row: Row; Relationships: [] };
 
+export type PushSubscriptionRow = {
+  id: string;
+  family_id: string;
+  member_id: string;
+  user_id: string;
+  endpoint: string;
+  p256dh: string;
+  auth: string;
+  user_agent: string | null;
+  morning: boolean;
+  evening: boolean;
+  fail_count: number;
+  last_sent_at: string | null;
+  created_at: string;
+};
+
+/** push_due() 가 돌려주는 발송 대상 1건 */
+export type PushTarget = {
+  id: string;
+  endpoint: string;
+  p256dh: string;
+  auth: string;
+  title: string;
+  body: string;
+  url: string;
+};
+
 export type Database = {
   public: {
     Tables: {
@@ -232,6 +259,10 @@ export type Database = {
       weight_logs: Table<WeightLogRow>;
       cheers: Table<CheerRow, "date">;
       sticker_bonuses: Table<StickerBonusRow, "reason_key">;
+      push_subscriptions: Table<
+        PushSubscriptionRow,
+        "user_agent" | "morning" | "evening" | "fail_count" | "last_sent_at"
+      >;
     };
     Views: {
       member_sticker_balances: View<MemberStickerBalanceRow>;
@@ -246,6 +277,13 @@ export type Database = {
         Args: { family_name: string; pin: string; members_json: unknown };
         Returns: string;
       };
+      save_push_subscription: {
+        Args: { p_member_id: string; p_endpoint: string; p_p256dh: string; p_auth: string; p_user_agent?: string | null };
+        Returns: PushSubscriptionRow;
+      };
+      delete_push_subscription: { Args: { p_endpoint: string }; Returns: undefined };
+      push_due: { Args: { p_secret: string; p_slot: string }; Returns: PushTarget[] };
+      push_report: { Args: { p_secret: string; p_results: unknown }; Returns: undefined };
     };
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;
