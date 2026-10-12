@@ -1,0 +1,116 @@
+@import "tailwindcss";
+
+/*
+  디자인 시스템 — 입체 파스텔 (PLAN.md 6절)
+  - 채도 낮은 파스텔 단색 면 + 아래쪽 두꺼운 edge 띠 + 부드러운 그림자
+  - 그라데이션, 광택, 반투명 유리 효과는 쓰지 않는다
+  - 파스텔 면 위의 글자·아이콘은 항상 deep 또는 ink
+*/
+@theme static {
+  /* 글꼴: Pretendard 가변 폰트 (layout.tsx 에서 next/font/local 로 로드) */
+  --font-sans: var(--font-pretendard), "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+
+  /* 바탕·글자 */
+  --color-bg: #f4f3fa;
+  --color-ink: #1f2547;
+  --color-muted: #4a5470;
+  --color-line: #e3e6f2;
+
+  /* 면 / edge / deep 3단 토큰 */
+  --color-surface: #ffffff;
+  --color-surface-edge: #d9ddee;
+
+  --color-hero: #c9d2ff;
+  --color-hero-edge: #a3afef;
+  --color-hero-deep: #1f2547;
+
+  --color-panel: #edf0ff;
+  --color-panel-edge: #a3afef;
+  --color-panel-deep: #1f2547;
+
+  --color-gold: #ffe7a8;
+  --color-gold-edge: #e6c56a;
+  --color-gold-deep: #5a3e00;
+
+  --color-blue: #c9d8ff;
+  --color-blue-edge: #9fb5f2;
+  --color-blue-deep: #2b4db3;
+
+  --color-mint: #c4ebdd;
+  --color-mint-edge: #94cfb8;
+  --color-mint-deep: #0b6b4c;
+
+  --color-peach: #ffd9c2;
+  --color-peach-edge: #edb08e;
+  --color-peach-deep: #9a4310;
+
+  --color-lavender: #ddd0ff;
+  --color-lavender-edge: #b9a4f0;
+  --color-lavender-deep: #5330a8;
+
+  --color-pink: #ffd1de;
+  --color-pink-edge: #efa3b9;
+  --color-pink-deep: #8c1941;
+
+  --color-check-on: #afc3ff;
+  --color-check-on-edge: #7f97e6;
+  --color-check-on-deep: #1f3a8f;
+
+  /* 그래프 선 색 */
+  --color-graph-blue: #7f9bf0;
+  --color-graph-peach: #f2a77f;
+  --color-graph-mint: #7ccbaa;
+  --color-graph-pink: #f2a0bc;
+
+  /* 모서리 */
+  --radius-card: 22px;
+  --radius-tile: 15px;
+  --radius-hero: 32px;
+  --radius-tabbar: 26px;
+
+  /* 카드 그림자 (edge 색은 --edge 변수로 주입) */
+  --shadow-card: 0 4px 0 var(--edge, var(--color-surface-edge)),
+    0 12px 18px rgba(90, 100, 160, 0.1);
+}
+
+/*
+  입체(raised) 유틸리티.
+  각 요소는 style 로 --edge 변수를 받는다. (lib/design/tokens.ts 의 toneStyle 참고)
+*/
+@utility raised-card {
+  box-shadow: 0 4px 0 var(--edge, var(--color-surface-edge)),
+    0 12px 18px rgba(90, 100, 160, 0.1);
+}
+
+@utility raised-hero {
+  box-shadow: 0 6px 0 var(--edge, var(--color-hero-edge));
+}
+
+/* 버튼·체크 버튼: 3px 띠. 누르면 2px 내려가고 띠가 1px 로 줄어든다 */
+@utility raised-3 {
+  box-shadow: 0 3px 0 var(--edge, var(--color-surface-edge));
+  transition:
+    transform 80ms ease,
+    box-shadow 80ms ease;
+  &:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 var(--edge, var(--color-surface-edge));
+  }
+}
+
+/* 아이콘 타일: 4px 띠 */
+@utility raised-4 {
+  box-shadow: 0 4px 0 var(--edge, var(--color-surface-edge));
+}
+
+html {
+  background: var(--color-bg);
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-tap-highlight-color: transparent;
+  font-feature-settings: "ss05"; /* Pretendard 간격 정리 */
+}
