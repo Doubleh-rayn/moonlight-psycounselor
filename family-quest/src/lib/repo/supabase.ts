@@ -199,6 +199,11 @@ export class SupabaseRepo implements FamilyRepo {
     return data as Row<T>;
   }
 
+  async remove(table: TableName, id: string): Promise<void> {
+    const { error } = await this.table(table).delete().eq("id", id);
+    if (error) throw toRepoError(error);
+  }
+
   async upsertCheckin(input: { goal_id: string; member_id: string; date: string; done: boolean; value: number }) {
     const fid = await this.requireFamilyId();
     const { data, error } = await this.db

@@ -119,10 +119,12 @@ export function QuestMapScreen() {
                     {(isCurrent || passed) && stageGoals(stage).length > 0 && (
                       <ul className="mt-3 flex flex-col gap-1.5">
                         {stageGoals(stage).map((g) => (
-                          <li key={g.id} className={clsx("flex items-center gap-2 rounded-[14px] bg-white/60 px-2 py-1.5", !g.active && "opacity-60")}>
-                            <QuestIcon goal={g} className="size-9 rounded-[11px]" />
-                            <span className="min-w-0 flex-1 truncate text-[13px] font-bold">{g.title}</span>
-                            <span className="text-[11px] opacity-80">{scheduleLabel(g)}</span>
+                          <li key={g.id} className={clsx("rounded-[14px] bg-white/60", !g.active && "opacity-60")}>
+                            <Link href={`/habits/${g.id}`} className="flex items-center gap-2 px-2 py-1.5" aria-label={`${g.title} 수정`}>
+                              <QuestIcon goal={g} className="size-9 rounded-[11px]" />
+                              <span className="min-w-0 flex-1 truncate text-[13px] font-bold">{g.title}</span>
+                              <span className="text-[11px] opacity-80">{scheduleLabel(g)}</span>
+                            </Link>
                           </li>
                         ))}
                       </ul>

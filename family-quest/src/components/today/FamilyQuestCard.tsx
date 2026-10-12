@@ -7,11 +7,14 @@ import { useReadyFamily } from "@/lib/store/FamilyStore";
 import { useActions } from "@/lib/store/actions";
 import { familyGoals, indexCheckins, isGoalLiveOn, isScheduledOn, isWeeklyGoal } from "@/lib/stats/schedule";
 import { scheduleLabel } from "@/lib/goals/kind";
+import { canEditGoal } from "@/lib/goals/permissions";
+import { useRouter } from "next/navigation";
 
 /** 가족 공동 퀘스트: 활성 구성원 전원이 체크해야 성공. "N명 중 M명 완료" */
 export function FamilyQuestCards() {
   const { snapshot, me, today, online } = useReadyFamily();
   const { setCheckin } = useActions();
+  const router = useRouter();
   const idx = indexCheckins(snapshot.checkins);
   const members = snapshot.members.filter((m) => m.active);
   const goals = familyGoals(snapshot.goals).filter((g) => isGoalLiveOn(g, today) && (isWeeklyGoal(g) || isScheduledOn(g, today)));
@@ -27,10 +30,15 @@ export function FamilyQuestCards() {
           <Card key={g.id} tone="pink">
             <div className="flex items-center gap-3">
               <QuestIcon goal={g} />
-              <div className="min-w-0 flex-1">
+              <button
+                type="button"
+                className="min-w-0 flex-1 text-left"
+                onClick={() => router.push(`/habits/${g.id}`)}
+                aria-label={`${g.title} ${canEditGoal(me, g) ? "수정" : "보기"}`}
+              >
                 <p className="text-[13px] font-semibold opacity-80">가족 공동 퀘스트</p>
                 <p className="truncate text-[16px] font-bold">{g.title}</p>
-              </div>
+              </button>
               <CheckButton checked={myDone} disabled={!online} onChange={(n) => void setCheckin(g, me.id, today, n).catch(() => {})} label={g.title} />
             </div>
             <div className="mt-3 flex items-center justify-between">

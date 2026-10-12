@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
 import { FamilyStoreProvider } from "@/lib/store/FamilyStore";
 import { ToastProvider } from "./Toast";
 import { PinGateProvider } from "./PinGate";
@@ -15,7 +15,10 @@ export function Providers({ children }: { children: ReactNode }) {
         <PinGateProvider>
           <DemoBanner />
           <PlanMaintenance />
-          <AppGate>{children}</AppGate>
+          {/* AppGate 가 usePathname 을 쓰므로 동적 경로(/habits/[id]) 프리렌더를 위해 Suspense 가 필요하다 */}
+          <Suspense fallback={null}>
+            <AppGate>{children}</AppGate>
+          </Suspense>
         </PinGateProvider>
       </FamilyStoreProvider>
     </ToastProvider>

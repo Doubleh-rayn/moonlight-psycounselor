@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Pencil, Plus } from "lucide-react";
 import clsx from "clsx";
 import { Card } from "@/components/ui/Card";
 import { CheckButton } from "@/components/ui/CheckButton";
@@ -16,14 +17,16 @@ import { useActions } from "@/lib/store/actions";
 import { todayCount, todayItems, type TodayItem } from "@/lib/stats/schedule";
 import { measureUnit, scheduleLabel, typeLabel } from "@/lib/goals/kind";
 import { addDays } from "@/lib/date";
+import { canEditGoal } from "@/lib/goals/permissions";
 
 /**
- * 내 퀘스트 목록. 한 번 탭으로 체크·해제. 횟수·분 항목은 제목을 눌러 값을 입력한다.
+ * 내 퀘스트 목록. 한 번 탭으로 체크·해제. 제목을 누르면 수정 화면, 횟수·분 항목은 "값 입력" 버튼으로 값을 넣는다.
  * 체크 수정은 당일과 전날까지 (그 이전은 기록 화면에서 PIN).
  */
 export function QuestList() {
   const { snapshot, me, today, online } = useReadyFamily();
   const { setCheckin } = useActions();
+  const router = useRouter();
   const [day, setDay] = useState<"today" | "yesterday">("today");
   const [editing, setEditing] = useState<TodayItem | null>(null);
   const date = day === "today" ? today : addDays(today, -1);
@@ -74,26 +77,36 @@ export function QuestList() {
           return (
             <li key={g.id} className="flex items-center gap-3 px-4 py-3">
               <QuestIcon goal={g} />
-              <button
-                type="button"
-                className="min-w-0 flex-1 text-left"
-                onClick={() => showProgress && setEditing(it)}
-                aria-label={showProgress ? `${g.title} 값 입력` : g.title}
-              >
-                <p className="truncate text-[16px] font-bold">{g.title}</p>
-                <p className="mt-0.5 text-[13px] text-muted">
-                  {scheduleLabel(g)} · {typeLabel(g)}{weekly} · 스티커 {g.stickers}
-                </p>
+              <div className="min-w-0 flex-1">
+                <button
+                  type="button"
+                  className="block w-full text-left"
+                  onClick={() => router.push(`/habits/${g.id}`)}
+                  aria-label={`${g.title} ${canEditGoal(me, g) ? "수정" : "보기"}`}
+                >
+                  <p className="flex items-center gap-1 truncate text-[16px] font-bold">
+                    <span className="truncate">{g.title}</span>
+                    <Pencil size={13} strokeWidth={2.2} aria-hidden className="shrink-0 text-muted" />
+                  </p>
+                  <p className="mt-0.5 text-[13px] text-muted">
+                    {scheduleLabel(g)} · {typeLabel(g)}{weekly} · 스티커 {g.stickers}
+                  </p>
+                </button>
                 {showProgress && (
-                  <div className="mt-1.5 flex items-center gap-2">
+                  <button
+                    type="button"
+                    className="mt-1.5 flex w-full items-center gap-2 text-left"
+                    onClick={() => setEditing(it)}
+                    aria-label={`${g.title} 값 입력`}
+                  >
                     <ProgressBar value={pct} color="var(--color-graph-peach)" height={6} label={`${g.target_value}${unit} 중 ${value}${unit}`} />
-                    <span className="shrink-0 text-[12px] font-semibold text-muted">
+                    <span className="shrink-0 text-[12px] font-semibold text-blue-deep">
                       {value}/{g.target_value}
-                      {unit}
+                      {unit} 입력
                     </span>
-                  </div>
+                  </button>
                 )}
-              </button>
+              </div>
               <CheckButton
                 checked={it.done}
                 disabled={!online}
@@ -106,10 +119,10 @@ export function QuestList() {
         {proposed.map((g) => (
           <li key={g.id} className="flex items-center gap-3 px-4 py-3 opacity-70">
             <QuestIcon goal={g} />
-            <div className="min-w-0 flex-1">
+            <button type="button" className="min-w-0 flex-1 text-left" onClick={() => router.push(`/habits/${g.id}`)} aria-label={`${g.title} 수정`}>
               <p className="truncate text-[16px] font-bold">{g.title}</p>
               <p className="mt-0.5 text-[13px] text-muted">관리자 승인 대기 중</p>
-            </div>
+            </button>
           </li>
         ))}
       </ul>

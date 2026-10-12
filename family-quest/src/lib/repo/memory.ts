@@ -346,6 +346,20 @@ export class MemoryRepo implements FamilyRepo {
     return next;
   }
 
+  async remove(table: TableName, id: string): Promise<void> {
+    const fid = this.requireFamilyId();
+    const rows = this.state.tables[table] as { id: string; family_id: string }[];
+    const i = rows.findIndex((r) => r.id === id && r.family_id === fid);
+    if (i < 0) throw new RepoError("행을 찾을 수 없습니다", "not_found");
+    rows.splice(i, 1);
+    // 퀘스트를 지우면 체크 기록도 함께 (DB 의 cascade 와 동일)
+    if (table === "quests") {
+      this.state.tables.checkins = this.state.tables.checkins.filter((c) => c.goal_id !== id);
+      this.commit("checkins");
+    }
+    this.commit(table);
+  }
+
   async upsertCheckin(input: { goal_id: string; member_id: string; date: string; done: boolean; value: number }) {
     const fid = this.requireFamilyId();
     const existing = this.state.tables.checkins.find(

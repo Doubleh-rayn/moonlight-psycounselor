@@ -104,6 +104,8 @@ export interface FamilyRepo {
   insert<T extends TableName>(table: T, row: InsertInput<T>): Promise<Row<T>>;
   insertMany<T extends TableName>(table: T, rows: InsertInput<T>[]): Promise<Row<T>[]>;
   update<T extends TableName>(table: T, id: string, patch: Partial<Row<T>>): Promise<Row<T>>;
+  /** 행 삭제 (RLS 로 가족 범위). 관련 체크 기록은 DB 의 on delete cascade 가 지운다 */
+  remove(table: TableName, id: string): Promise<void>;
   /** 체크 저장: (goal_id, member_id, date) 유일 키로 upsert */
   upsertCheckin(input: {
     goal_id: string;
