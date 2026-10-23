@@ -343,6 +343,98 @@
     });
   }
 
+  // ── 방문자 통계 ─────────────────────────────
+
+  const COUNTRY_NAMES = {
+    KR: "대한민국", US: "미국", JP: "일본", CN: "중국", TW: "대만", HK: "홍콩", SG: "싱가포르",
+    VN: "베트남", TH: "태국", PH: "필리핀", ID: "인도네시아", IN: "인도", AU: "호주", CA: "캐나다",
+    GB: "영국", DE: "독일", FR: "프랑스", NL: "네덜란드", RU: "러시아", BR: "브라질",
+  };
+  const DEVICE_NAMES = { desktop: "데스크톱", mobile: "모바일", tablet: "태블릿" };
+
+  function fmt(n) {
+    return Number(n || 0).toLocaleString("ko-KR");
+  }
+
+  function fillTable(tableId, rows, labelKey, labelMap, emptyLabel) {
+    const table = document.getElementById(tableId);
+    table.innerHTML = "";
+    const data = (rows || []).filter((r) => (r.visitors || 0) > 0 || (r.pageviews || 0) > 0);
+    if (data.length === 0) {
+      const tr = el("tr");
+      const td = el("td", "stats-empty", "아직 데이터가 없습니다");
+      td.colSpan = 3;
+      tr.appendChild(td);
+      table.appendChild(tr);
+      return;
+    }
+    const head = el("tr");
+    ["구분", "방문자", "페이지뷰"].forEach((h) => head.appendChild(el("th", null, h)));
+    table.appendChild(head);
+    data.forEach((r) => {
+      const raw = r[labelKey];
+      let label = raw === "" || raw === null || raw === undefined ? emptyLabel : raw;
+      if (labelMap && labelMap[label]) label = labelMap[label];
+      const tr = el("tr");
+      tr.appendChild(el("td", null, String(label)));
+      tr.appendChild(el("td", "num", fmt(r.visitors)));
+      tr.appendChild(el("td", "num", fmt(r.pageviews)));
+      table.appendChild(tr);
+    });
+  }
+
+  function renderChart(daily) {
+    const chart = document.getElementById("statsChart");
+    chart.innerHTML = "";
+    const rows = daily || [];
+    const max = Math.max(1, ...rows.map((r) => r.visitors || 0));
+    rows.forEach((r) => {
+      const v = r.visitors || 0;
+      const d = new Date(r.timestamp);
+      const dayLabel = `${d.getUTCMonth() + 1}/${d.getUTCDate()}`;
+      const col = el("div", "stats-bar-col");
+      col.title = `${dayLabel} · 방문자 ${fmt(v)} · 페이지뷰 ${fmt(r.pageviews)}`;
+      const bar = el("div", "stats-bar");
+      bar.style.height = `${Math.round((v / max) * 100)}%`;
+      if (v > 0) bar.appendChild(el("span", "stats-bar-value", String(v)));
+      col.appendChild(bar);
+      col.appendChild(el("span", "stats-bar-label", dayLabel));
+      chart.appendChild(col);
+    });
+  }
+
+  async function loadStats() {
+    const status = document.getElementById("statsStatus");
+    const body = document.getElementById("statsBody");
+    status.textContent = "통계 불러오는 중...";
+    try {
+      const res = await fetch("/api/stats", { cache: "no-store" });
+      const data = await res.json();
+      if (!res.ok) {
+        body.hidden = true;
+        status.textContent = data.error || "통계를 불러오지 못했습니다.";
+        return;
+      }
+      document.getElementById("st7v").textContent = fmt(data.totals7.visitors);
+      document.getElementById("st7p").textContent = fmt(data.totals7.pageviews);
+      document.getElementById("st30v").textContent = fmt(data.totals30.visitors);
+      document.getElementById("st30p").textContent = fmt(data.totals30.pageviews);
+      renderChart(data.daily);
+      fillTable("statsCountries", data.countries, "country", COUNTRY_NAMES, "알 수 없음");
+      fillTable("statsDevices", data.devices, "deviceType", DEVICE_NAMES, "알 수 없음");
+      fillTable("statsReferrers", data.referrers, "referrerHostname", null, "직접 접속 / 북마크");
+      fillTable("statsPages", data.pages, "requestPath", null, "/");
+      body.hidden = false;
+      const now = new Date();
+      status.textContent = `업데이트: ${now.getMonth() + 1}/${now.getDate()} ${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+    } catch (err) {
+      body.hidden = true;
+      status.textContent = "통계 서버에 연결할 수 없습니다.";
+    }
+  }
+
+  document.getElementById("statsRefresh").addEventListener("click", loadStats);
+
   // ── 로그인 / 세션 / 저장 흐름 ─────────────────
 
   const loginScreen = document.getElementById("loginScreen");
@@ -365,6 +457,7 @@
     loginScreen.hidden = true;
     editorScreen.hidden = false;
     saveStatus.textContent = "불러오는 중...";
+    loadStats();
     try {
       const res = await fetch("/api/content", { cache: "no-store" });
       const content = await res.json();

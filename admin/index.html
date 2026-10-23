@@ -40,6 +40,30 @@
   </header>
 
   <main class="editor-main">
+    <section class="editor-section stats-section" id="statsSection">
+      <div class="stats-header">
+        <h2 class="editor-section-title">방문자 통계 <span class="stats-sub">최근 30일 · Vercel Web Analytics</span></h2>
+        <button type="button" id="statsRefresh" class="btn-ghost-small">새로고침</button>
+      </div>
+      <p id="statsStatus" class="save-status" role="status" aria-live="polite"></p>
+      <div id="statsBody" hidden>
+        <div class="stats-tiles">
+          <div class="stats-tile"><span class="stats-tile-label">7일 방문자</span><strong id="st7v">–</strong></div>
+          <div class="stats-tile"><span class="stats-tile-label">7일 페이지뷰</span><strong id="st7p">–</strong></div>
+          <div class="stats-tile"><span class="stats-tile-label">30일 방문자</span><strong id="st30v">–</strong></div>
+          <div class="stats-tile"><span class="stats-tile-label">30일 페이지뷰</span><strong id="st30p">–</strong></div>
+        </div>
+        <h3 class="editor-subtitle">일별 방문자</h3>
+        <div id="statsChart" class="stats-chart" role="img" aria-label="최근 30일 일별 방문자 막대 그래프"></div>
+        <div class="stats-grid">
+          <div><h3 class="editor-subtitle">국가</h3><table class="stats-table" id="statsCountries"></table></div>
+          <div><h3 class="editor-subtitle">기기</h3><table class="stats-table" id="statsDevices"></table></div>
+          <div><h3 class="editor-subtitle">유입 경로</h3><table class="stats-table" id="statsReferrers"></table></div>
+          <div><h3 class="editor-subtitle">많이 본 페이지</h3><table class="stats-table" id="statsPages"></table></div>
+        </div>
+      </div>
+    </section>
+
     <p id="saveStatus" class="save-status" role="status" aria-live="polite"></p>
     <div id="editorRoot"></div>
     <div class="save-bar">
