@@ -293,6 +293,27 @@
   gap: 4px;
 }
 
+.stats-cumulative {
+  margin: 18px 0 6px;
+  padding: 14px 16px 10px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-tile);
+  background: #fff;
+}
+
+.stats-cumulative .editor-subtitle {
+  margin-top: 0;
+}
+
+.stats-tile-accent {
+  background: var(--teal-pale);
+  border-color: #cfe6df;
+}
+
+.stats-tile-accent strong {
+  color: var(--teal-deep-ink);
+}
+
 .stats-tile-label {
   font-size: 11.5px;
   color: var(--text-muted);

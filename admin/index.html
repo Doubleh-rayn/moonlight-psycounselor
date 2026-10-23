@@ -53,7 +53,22 @@
           <div class="stats-tile"><span class="stats-tile-label">30일 방문자</span><strong id="st30v">–</strong></div>
           <div class="stats-tile"><span class="stats-tile-label">30일 페이지뷰</span><strong id="st30p">–</strong></div>
         </div>
-        <h3 class="editor-subtitle">일별 방문자</h3>
+        <div class="stats-cumulative">
+          <div class="stats-header">
+            <h3 class="editor-subtitle">누적 방문자 <span class="stats-sub" id="statsHistoryNote"></span></h3>
+            <button type="button" id="statsSnapshot" class="btn-ghost-small">지금 저장</button>
+          </div>
+          <div class="stats-tiles">
+            <div class="stats-tile stats-tile-accent"><span class="stats-tile-label" id="stYearLabel">올해 누적 방문자</span><strong id="stYearV">–</strong></div>
+            <div class="stats-tile stats-tile-accent"><span class="stats-tile-label">올해 누적 페이지뷰</span><strong id="stYearP">–</strong></div>
+            <div class="stats-tile"><span class="stats-tile-label">전체 누적 방문자</span><strong id="stAllV">–</strong></div>
+            <div class="stats-tile"><span class="stats-tile-label">전체 누적 페이지뷰</span><strong id="stAllP">–</strong></div>
+          </div>
+          <h3 class="editor-subtitle">월별 방문자</h3>
+          <table class="stats-table" id="statsMonths"></table>
+        </div>
+
+        <h3 class="editor-subtitle">일별 방문자 (최근 30일)</h3>
         <div id="statsChart" class="stats-chart" role="img" aria-label="최근 30일 일별 방문자 막대 그래프"></div>
         <div class="stats-grid">
           <div><h3 class="editor-subtitle">국가</h3><table class="stats-table" id="statsCountries"></table></div>

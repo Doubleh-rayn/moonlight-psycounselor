@@ -424,6 +424,7 @@
       fillTable("statsDevices", data.devices, "deviceType", DEVICE_NAMES, "알 수 없음");
       fillTable("statsReferrers", data.referrers, "referrerHostname", null, "직접 접속 / 북마크");
       fillTable("statsPages", data.pages, "requestPath", null, "/");
+      renderHistory(data.history);
       body.hidden = false;
       const now = new Date();
       status.textContent = `업데이트: ${now.getMonth() + 1}/${now.getDate()} ${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
@@ -433,7 +434,58 @@
     }
   }
 
+  function renderHistory(h) {
+    const note = document.getElementById("statsHistoryNote");
+    const table = document.getElementById("statsMonths");
+    table.innerHTML = "";
+    if (!h || !h.recorded) {
+      note.textContent = "아직 저장된 기록이 없습니다. 매일 새벽 자동 저장되며, '지금 저장'으로 바로 시작할 수 있습니다.";
+      ["stYearV", "stYearP", "stAllV", "stAllP"].forEach((id) => (document.getElementById(id).textContent = "–"));
+      return;
+    }
+    const y = h.thisYear || {};
+    document.getElementById("stYearLabel").textContent = `${y.year || ""}년 누적 방문자`;
+    document.getElementById("stYearV").textContent = fmt(y.visitors);
+    document.getElementById("stYearP").textContent = fmt(y.pageviews);
+    document.getElementById("stAllV").textContent = fmt(h.allTime.visitors);
+    document.getElementById("stAllP").textContent = fmt(h.allTime.pageviews);
+    note.textContent = `${h.firstDate}부터 기록 · ${fmt(h.days)}일치 · 마지막 ${h.lastDate}`;
+
+    const head = el("tr");
+    ["월", "방문자", "페이지뷰"].forEach((t) => head.appendChild(el("th", null, t)));
+    table.appendChild(head);
+    (h.months || []).forEach((m) => {
+      const [yy, mm] = m.month.split("-");
+      const tr = el("tr");
+      tr.appendChild(el("td", null, `${yy}년 ${parseInt(mm, 10)}월`));
+      tr.appendChild(el("td", "num", fmt(m.visitors)));
+      tr.appendChild(el("td", "num", fmt(m.pageviews)));
+      table.appendChild(tr);
+    });
+  }
+
+  async function runSnapshot() {
+    const btn = document.getElementById("statsSnapshot");
+    const status = document.getElementById("statsStatus");
+    btn.disabled = true;
+    status.textContent = "일별 기록 저장 중...";
+    try {
+      const res = await fetch("/api/snapshot?days=30", { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) {
+        status.textContent = data.error || "저장에 실패했습니다.";
+        return;
+      }
+      await loadStats();
+    } catch (err) {
+      status.textContent = "저장 서버에 연결할 수 없습니다.";
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
   document.getElementById("statsRefresh").addEventListener("click", loadStats);
+  document.getElementById("statsSnapshot").addEventListener("click", runSnapshot);
 
   // ── 로그인 / 세션 / 저장 흐름 ─────────────────
 
